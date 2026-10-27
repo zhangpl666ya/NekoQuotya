@@ -1,0 +1,30 @@
+{
+  "id": "claude",
+  "name": { "en": "Claude-chan", "zh-CN": "Claude 娘" },
+  "version": 1,
+  "packFormat": 1,
+  "source": {
+    "tokscaleClients": ["claude"],
+    "quotaProvider": "Claude",
+    "lateArrivalDays": 0,
+    "watch": [
+      { "path": "${CLAUDE_CONFIG_DIR|~/.claude}/projects" },
+      { "path": "${CLAUDE_CONFIG_DIR|~/.claude}/transcripts" },
+      { "path": "${APPDATA|~/AppData/Roaming}/Claude/local-agent-mode-sessions" },
+      { "path": "${APPDATA|~/AppData/Roaming}/Claude/claude-code-sessions" }
+    ]
+  },
+  "behavior": {
+    "dailyBudget": 2000000,
+    "moodBasis": "quota",
+    "idleSleepMinutes": 30
+  },
+  "theme": {
+    "color": "#D97757"
+  },
+  "appearance": {
+    "renderer": "image",
+    "entry": "appearance/appearance.json",
+    "card": "appearance/card.png"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "size": [
+    171,
+    180
+  ],
+  "images": {
+    "mood.ENERGETIC": "energetic.png",
+    "mood.FOCUSED": "focused.png",
+    "mood.SWEATING": "sweating.png",
+    "mood.PANICKED": "panicked.png",
+    "mood.EXHAUSTED": "exhausted.png",
+    "activity.sleeping": "sleeping.png"
+  }
+}

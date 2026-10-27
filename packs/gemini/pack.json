@@ -1,0 +1,39 @@
+{
+  "id": "gemini",
+  "name": {
+    "en": "Gemini-chan",
+    "zh-CN": "Gemini 娘"
+  },
+  "version": 1,
+  "packFormat": 1,
+  "source": {
+    "tokscaleClients": [
+      "gemini"
+    ],
+    "quotaProvider": null,
+    "lateArrivalDays": 0,
+    "watch": [
+      {
+        "path": "~/.gemini/tmp"
+      }
+    ]
+  },
+  "behavior": {
+    "dailyBudget": 2000000,
+    "moodBasis": "budget",
+    "idleSleepMinutes": 30
+  },
+  "theme": {
+    "color": "#7B6FD6",
+    "gradient": [
+      "#4285F4",
+      "#9B72CB",
+      "#D96570"
+    ]
+  },
+  "appearance": {
+    "renderer": "image",
+    "entry": "appearance/appearance.json",
+    "card": "appearance/card.png"
+  }
+}

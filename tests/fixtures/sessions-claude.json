@@ -1,0 +1,44 @@
+{
+  "groupBy": "client,session,model",
+  "entries": [
+    {
+      "client": "claude",
+      "sessionId": "2c909139-5b96-4cb4-9161-0345e0a4bfb2",
+      "model": "claude-opus-5-5",
+      "provider": "anthropic",
+      "input": 228,
+      "output": 147864,
+      "cacheRead": 23423884,
+      "cacheWrite": 589163,
+      "reasoning": 0,
+      "messageCount": 101,
+      "cost": 12.356272799999998
+    },
+    {
+      "client": "claude",
+      "sessionId": "c6996a0b-bf95-51cc-b7cf-e477bfe0b3e0",
+      "model": "claude-opus-5-5",
+      "provider": "anthropic",
+      "input": 94,
+      "output": 49103,
+      "cacheRead": 6125587,
+      "cacheWrite": 180655,
+      "reasoning": 0,
+      "messageCount": 41,
+      "cost": 3.6527934
+    },
+    {
+      "client": "claude",
+      "sessionId": "dd044914-ab99-4827-898e-721b2ea1c9e8",
+      "model": "claude-opus-5-5",
+      "provider": "anthropic",
+      "input": 14,
+      "output": 5950,
+      "cacheRead": 358795,
+      "cacheWrite": 38512,
+      "reasoning": 0,
+      "messageCount": 5,
+      "cost": 0.49891099999999994
+    }
+  ]
+}

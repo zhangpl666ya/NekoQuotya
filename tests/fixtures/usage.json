@@ -1,0 +1,84 @@
+[
+  {
+    "provider": "Claude",
+    "plan": "Pro ai",
+    "email": null,
+    "metrics": [
+      {
+        "label": "Session",
+        "used_percent": 23,
+        "remaining_percent": 77,
+        "remaining_label": null,
+        "resets_at": "2026-10-27T06:30:00.534355+00:00"
+      },
+      {
+        "label": "Weekly",
+        "used_percent": 3,
+        "remaining_percent": 97,
+        "remaining_label": null,
+        "resets_at": "2026-10-29T23:00:00.534375+00:00"
+      }
+    ]
+  },
+  {
+    "provider": "Codex",
+    "plan": "Plus",
+    "email": "user@example.com",
+    "metrics": [
+      {
+        "label": "5h",
+        "used_percent": 0,
+        "remaining_percent": 100,
+        "remaining_label": null,
+        "resets_at": "2026-10-27T09:46:46+00:00"
+      },
+      {
+        "label": "Weekly",
+        "used_percent": 0,
+        "remaining_percent": 100,
+        "remaining_label": null,
+        "resets_at": "2026-11-02T12:08:50+00:00"
+      }
+    ],
+    "reset_credits": {
+      "available_count": 0
+    },
+    "credit_status": {
+      "balance": "0",
+      "has_credits": false,
+      "unlimited": false,
+      "overage_limit_reached": false
+    },
+    "spend_control": {
+      "reached": false
+    }
+  },
+  {
+    "provider": "Copilot",
+    "plan": "Individual",
+    "email": null,
+    "metrics": [
+      {
+        "label": "Chat",
+        "used_percent": 0,
+        "remaining_percent": 100,
+        "remaining_label": "200/200 left",
+        "resets_at": "2026-11-01"
+      },
+      {
+        "label": "Completions",
+        "used_percent": 0,
+        "remaining_percent": 100,
+        "remaining_label": "2000/2000 left",
+        "resets_at": "2026-11-01"
+      },
+      {
+        "label": "Premium",
+        "used_percent": 100,
+        "remaining_percent": 0,
+        "remaining_label": "0/0 left",
+        "resets_at": "2026-11-01"
+      }
+    ]
+  }
+]

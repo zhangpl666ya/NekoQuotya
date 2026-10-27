@@ -1,0 +1,34 @@
+{
+  "id": "gpt",
+  "name": {
+    "en": "GPT-chan",
+    "zh-CN": "GPT 娘"
+  },
+  "version": 1,
+  "packFormat": 1,
+  "source": {
+    "tokscaleClients": [
+      "codex"
+    ],
+    "quotaProvider": "Codex",
+    "lateArrivalDays": 0,
+    "watch": [
+      {
+        "path": "${CODEX_HOME|~/.codex}/sessions"
+      }
+    ]
+  },
+  "behavior": {
+    "dailyBudget": 2000000,
+    "moodBasis": "quota",
+    "idleSleepMinutes": 30
+  },
+  "theme": {
+    "color": "#1F1F1F"
+  },
+  "appearance": {
+    "renderer": "image",
+    "entry": "appearance/appearance.json",
+    "card": "appearance/card.png"
+  }
+}

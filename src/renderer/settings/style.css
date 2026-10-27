@@ -1,0 +1,182 @@
+/*
+ * Settings window: frameless like the launcher panel, white, full width, sized to its
+ * content (App.tsx reports the height). --pack is the selected tool's brand colour.
+ */
+
+html,
+body {
+  margin: 0;
+  background: #ffffff;
+  color: #1f1d24;
+  font-family: 'Segoe UI', 'Microsoft YaHei', system-ui, sans-serif;
+  font-size: 13px;
+  user-select: none;
+}
+
+.page {
+  --pack: #5f5e5a;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- title bar: the window can be dragged by it ---- */
+
+.titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  padding: 0 4px 0 14px;
+  border-bottom: 1px solid #ecebf1;
+  font-weight: 600;
+  -webkit-app-region: drag;
+}
+
+.close {
+  -webkit-app-region: no-drag;
+  width: 36px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #6b6878;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.close:hover {
+  background: #e5484d;
+  color: #ffffff;
+}
+
+/* ---- groups: full width, no frames, separated by a hairline ---- */
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #ecebf1;
+}
+
+.group:last-child {
+  border-bottom: none;
+}
+
+.group-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.group-title.pack-name {
+  color: var(--pack);
+}
+
+/* ---- pet picker ---- */
+
+.pets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pet {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #e2e0ea;
+  background: #ffffff;
+  color: #1f1d24;
+}
+
+.pet .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--pack);
+}
+
+.pet.active {
+  border-color: var(--pack);
+  background: color-mix(in srgb, var(--pack) 10%, #ffffff);
+  color: var(--pack);
+  font-weight: 600;
+}
+
+.pet.none.active {
+  border-color: #6b6878;
+  background: #f4f3f7;
+  color: #1f1d24;
+}
+
+/* ---- fields ---- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field > span {
+  font-weight: 600;
+}
+
+.field small {
+  color: #6b6878;
+}
+
+input[type='number'],
+select {
+  font: inherit;
+  padding: 6px 8px;
+  border: 1px solid #d9d6e2;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+input:focus,
+select:focus {
+  outline: 2px solid color-mix(in srgb, var(--pack) 45%, transparent);
+  outline-offset: 0;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.check input {
+  accent-color: var(--pack);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+button {
+  font: inherit;
+  padding: 5px 14px;
+  border-radius: 6px;
+  border: 1px solid #d9d6e2;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+button.primary {
+  background: var(--pack);
+  border-color: var(--pack);
+  color: #ffffff;
+}
+
+.ok {
+  color: #2f8f4e;
+}
+
+.err {
+  color: #d93d42;
+}

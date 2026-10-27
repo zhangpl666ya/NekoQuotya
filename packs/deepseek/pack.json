@@ -1,0 +1,34 @@
+{
+  "id": "deepseek",
+  "name": {
+    "en": "DeepSeek-chan",
+    "zh-CN": "DeepSeek 娘"
+  },
+  "version": 1,
+  "packFormat": 1,
+  "source": {
+    "tokscaleClients": [
+      "dsh"
+    ],
+    "quotaProvider": null,
+    "lateArrivalDays": 0,
+    "watch": [
+      {
+        "path": "~/.dsh/sessions"
+      }
+    ]
+  },
+  "behavior": {
+    "dailyBudget": 2000000,
+    "moodBasis": "budget",
+    "idleSleepMinutes": 30
+  },
+  "theme": {
+    "color": "#4D6BFE"
+  },
+  "appearance": {
+    "renderer": "image",
+    "entry": "appearance/appearance.json",
+    "card": "appearance/card.png"
+  }
+}

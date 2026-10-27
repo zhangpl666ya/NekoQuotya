@@ -1,0 +1,6 @@
+node_modules/
+tmp/
+out/
+dist/
+# Runtime data inside packs (usage ledgers, quota, settings): never committed
+packs/*/data/

@@ -1,0 +1,128 @@
+/*
+ * Pet window: the character on the left, the quota widget on the right, the speech
+ * bubble above the character. Only the character is clickable; everything else
+ * clicks through (decided in main.ts via the renderer's hit test).
+ * --pack / --pack-fill: the tool's brand colour (pack.json → theme).
+ */
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  user-select: none;
+  font-family: 'Segoe UI', 'Microsoft YaHei', system-ui, sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+#row {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+#stage {
+  position: relative;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+#stage canvas {
+  display: block;
+}
+
+/* ---- speech bubble ---- */
+
+#bubble {
+  position: absolute;
+  left: 4px;
+  bottom: calc(var(--stage-height, 180px) + 4px);
+  max-width: calc(100% - 8px);
+  box-sizing: border-box;
+  padding: 6px 11px;
+  border-radius: 12px;
+  background: rgba(24, 24, 32, 0.86);
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.4;
+  word-break: break-word;
+  animation: pop 0.18s ease-out;
+}
+
+#bubble[hidden] {
+  display: none;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ---- quota widget ---- */
+
+#hud {
+  width: 104px;
+  box-sizing: border-box;
+  margin-bottom: calc(var(--stage-height, 180px) * 0.3);
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid color-mix(in srgb, var(--pack) 30%, #e7e5ee);
+  border-left: 3px solid var(--pack);
+  color: #1f1d24;
+  font-size: 11px;
+  line-height: 1.25;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#hud[hidden] {
+  display: none;
+}
+
+.hud-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.hud-label {
+  color: #6b6878;
+}
+
+.hud-value {
+  font-weight: 600;
+  color: var(--pack);
+}
+
+.hud-track {
+  height: 4px;
+  margin-top: 2px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--pack) 14%, #ffffff);
+  overflow: hidden;
+}
+
+.hud-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--pack-fill, var(--pack));
+}
+
+.hud-item.stale {
+  opacity: 0.55;
+}

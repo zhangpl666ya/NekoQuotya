@@ -1,0 +1,19 @@
+{
+  // Node side: main process, collector, preloads, shared code, tests.
+  // The windows (src/renderer) are checked by tsconfig.web.json.
+  "compilerOptions": {
+    "target": "ES2024",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2024"],
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/main", "src/collector", "src/preload", "src/shared", "tests", "electron.vite.config.ts"]
+}
