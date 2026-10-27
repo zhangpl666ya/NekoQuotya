@@ -23,6 +23,120 @@ Using the pet: click to poke (her quota bars show for a few seconds), drag to mo
 
 Your data stays on your computer: usage is read locally by tokscale and stored in `%APPDATA%\NekoQuotya\packs\<pack>\data`. Uninstalling leaves that folder in place.
 
+Using an AI agent to set it up? Point it at [For AI agents](#for-ai-agents-configuring-nekoquotya-for-a-user).
+
+## For AI agents: configuring NekoQuotya for a user
+
+This section is written for coding agents (Claude Code, Codex, etc.) helping a user set up or customize NekoQuotya. All paths are for the **installed app** on Windows.
+
+### Where things live
+
+| What | Path | Notes |
+|---|---|---|
+| App | `%LOCALAPPDATA%\Programs\NekoQuotya\NekoQuotya.exe` | default per-user install |
+| Packs (one per AI tool) | `%APPDATA%\NekoQuotya\packs\<id>\` | `pack.json`, `appearance/`, `data/` |
+| User settings per pack | `%APPDATA%\NekoQuotya\packs\<id>\data\settings.json` | survives upgrades |
+| Usage ledger | `%APPDATA%\NekoQuotya\packs\<id>\data\history.json` | **never delete**: it keeps sessions whose logs the tool has cleaned up |
+| Status and errors | `%APPDATA%\NekoQuotya\packs\<id>\data\status.json` | `lastError.code` explains failures |
+| Card order | `%APPDATA%\NekoQuotya\layout.json` | `{ "packOrder": ["claude", "gpt", ...] }` |
+
+Quit the app (tray icon → right-click → Quit) before editing any file, then start it again. Changes are read at startup.
+
+### 1. Check that the user's tool is detected
+
+NekoQuotya reads all usage through [tokscale](https://github.com/junhoyeo/tokscale) 4.20.1, bundled at `<install dir>\resources\bin\tokscale.exe`:
+
+```powershell
+& "$env:LOCALAPPDATA\Programs\NekoQuotya\resources\bin\tokscale.exe" clients        # scan locations and message counts per client (✓ = found)
+& "$env:LOCALAPPDATA\Programs\NekoQuotya\resources\bin\tokscale.exe" usage --json   # subscription quotas, by provider name
+```
+
+Built-in packs and what they need:
+
+| Pack id | tokscale client | Default log folder | Quota provider |
+|---|---|---|---|
+| `claude` | `claude` | `~/.claude` (or `CLAUDE_CONFIG_DIR`) | `Claude` |
+| `gpt` | `codex` | `~/.codex` (or `CODEX_HOME`) | `Codex` |
+| `gemini` | `gemini` | `~/.gemini` | none |
+| `deepseek` | `dsh` (DeepSeek Harness) | `~/.dsh` | none |
+
+If a tool shows ✗ in `tokscale clients`, the user hasn't used it on this machine yet, or its logs are somewhere else. If the quota is missing, the user is probably not signed in to that tool's CLI.
+
+### 2. Change behavior (budget, mood, sleep, chatter)
+
+Prefer the in-app Settings window. To script it, write `data\settings.json` for the pack. Only these keys are read:
+
+```json
+{
+  "behavior": {
+    "dailyBudget": 2000000,
+    "moodBasis": "quota",
+    "idleSleepMinutes": 30,
+    "chatterMinutes": [15, 30]
+  }
+}
+```
+
+- `moodBasis`: `"quota"` follows the subscription quota %, `"budget"` follows `dailyBudget`. A pack without a quota provider always uses the budget.
+- `dailyBudget`: input + output tokens per day that count as 100%.
+- `chatterMinutes`: `null` turns idle chatter off.
+
+Invalid values are ignored, and the pack's default is used instead.
+
+### 3. Add a pack for another AI tool
+
+Do **not** edit a built-in pack's `pack.json`: it is replaced when the app updates. Create a new folder with a new id instead, e.g. `%APPDATA%\NekoQuotya\packs\kimi\pack.json`:
+
+```json
+{
+  "id": "kimi",
+  "name": { "en": "Kimi-chan", "zh-CN": "Kimi 娘" },
+  "version": 1,
+  "packFormat": 1,
+  "source": {
+    "tokscaleClients": ["kimi"],
+    "quotaProvider": null,
+    "watch": [{ "path": "~/.kimi/sessions" }]
+  },
+  "behavior": { "dailyBudget": 2000000, "moodBasis": "budget" },
+  "theme": { "color": "#3D5AFE" },
+  "appearance": { "renderer": "placeholder" }
+}
+```
+
+Rules:
+- `id` must match the folder name: lowercase letters, digits and `-`.
+- `tokscaleClients` are ids from `tokscale --help` (`--client` values), e.g. `opencode`, `cursor`, `qwen`, `kimi`, `cline`, `roocode`, `cherrystudio`. Each client may belong to only one pack, so don't reuse `claude`, `codex`, `gemini` or `dsh`.
+- `quotaProvider` is a provider name from `tokscale usage --json` (e.g. `"Claude"`, `"Codex"`, `"Copilot"`), or `null`.
+- `watch` lists log folders to watch for live updates. It supports `~` and `${ENV_VAR|default}`. Without it, usage still refreshes every 5 minutes.
+- `theme.gradient` (2–4 `#rrggbb` colours) is optional.
+
+Art is optional. With `"renderer": "placeholder"` the pet is a simple drawn face. For images, put transparent PNGs of one size in `appearance/`:
+- `energetic.png`, `focused.png`, `sweating.png`, `panicked.png`, `exhausted.png` and `sleeping.png`. Only `energetic.png` is required; missing ones fall back.
+- An optional `card.png` for the panel card.
+
+Then add `appearance/appearance.json`:
+
+```json
+{
+  "size": [180, 180],
+  "images": {
+    "mood.ENERGETIC": "energetic.png", "mood.FOCUSED": "focused.png", "mood.SWEATING": "sweating.png",
+    "mood.PANICKED": "panicked.png", "mood.EXHAUSTED": "exhausted.png", "activity.sleeping": "sleeping.png"
+  }
+}
+```
+
+Finally, set `"appearance": { "renderer": "image", "entry": "appearance/appearance.json", "card": "appearance/card.png" }`.
+
+A pack that fails validation is skipped, and the reason is shown at the bottom of the tray panel.
+
+### Environment variables
+
+- `NEKO_LANG=en` or `zh-CN`: force the UI language (the default follows the system).
+- `NEKO_TOKSCALE_PATH`: use a different tokscale executable.
+- `HTTPS_PROXY` / system proxy: used for quota queries.
+
 ## Development
 
 ```bash
