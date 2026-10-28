@@ -19,6 +19,7 @@
   <nav class="nav">
     <a class="brand" href="#top"><img src="assets/icon.webp" alt="" width="32" height="32" />NekoQuotya</a>
     <div class="nav-links">
+      <a href="#video" data-i18n="nav.video">Video</a>
       <a href="#mood" data-i18n="nav.mood">Mood</a>
       <a href="#girls" data-i18n="nav.girls">Meet the girls</a>
       <a href="#panel" data-i18n="nav.panel">Panel</a>
@@ -57,8 +58,22 @@
       </div>
       <p class="meta" data-i18n="hero.meta">Free · v1.0.1 · Windows 10/11 · data never leaves your PC</p>
     </div>
-    <a class="scroll-hint" href="#desktop" aria-label="Scroll"><span></span></a>
+    <a class="scroll-hint" href="#video" aria-label="Scroll"><span></span></a>
   </header>
+
+  <!-- ============ promo video (one per language) ============ -->
+  <section class="section video-sec" id="video">
+    <div class="video-text reveal">
+      <p class="kicker" data-i18n="video.kicker">17 seconds</p>
+      <h2 data-i18n="video.title">Watch her panic so you don't have to</h2>
+      <p data-i18n="video.text">From a fresh quota to "quota gone!" in a few bars of music. Then GPT-chan, Gemini-chan and DeepSeek-chan take the stage.</p>
+      <p class="demo-note" data-i18n="video.sound">Plays muted. Tap the button for sound.</p>
+    </div>
+    <div class="phone reveal">
+      <video id="promo" playsinline muted loop preload="metadata" poster="assets/video/poster-en.webp" src="assets/video/promo-en.mp4"></video>
+      <button class="sound" id="sound" type="button" data-i18n="video.unmute">🔊 Tap for sound</button>
+    </div>
+  </section>
 
   <!-- ============ desktop demo ============ -->
   <section class="section desktop-sec" id="desktop">

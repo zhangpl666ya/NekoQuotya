@@ -13,12 +13,15 @@
 
   const STRINGS = {
     en: {
-      'nav.mood': 'Mood', 'nav.girls': 'Meet the girls', 'nav.panel': 'Panel', 'nav.agents': 'For agents',
+      'nav.video': 'Video', 'nav.mood': 'Mood', 'nav.girls': 'Meet the girls', 'nav.panel': 'Panel', 'nav.agents': 'For agents',
       'hero.eyebrow': 'A desktop pet for AI developers',
       'hero.tagline': 'Your AI coding quota, guarded by a cat-girl.',
       'hero.sub': "She sits on your desktop, watches your Claude Code, Codex, Gemini CLI and DeepSeek usage, and her mood follows your quota. Panicking before you hit the limit, so you don't have to.",
       'hero.meta': 'Free · v1.0.1 · Windows 10/11 · data never leaves your PC',
       'cta.download': 'Download for Windows', 'cta.star': '★ Star on GitHub', 'cta.source': 'View source',
+      'video.kicker': '17 seconds', 'video.title': "Watch her panic so you don't have to",
+      'video.text': 'From a fresh quota to "quota gone!" in a few bars of music. Then GPT-chan, Gemini-chan and DeepSeek-chan take the stage.',
+      'video.sound': 'Plays muted. Tap the button for sound.', 'video.unmute': '🔊 Tap for sound',
       'desk.kicker': 'Lives on your desktop',
       'desk.title': 'Code as usual. She keeps an eye on the meter.',
       'desk.text': 'Tap her and a tiny quota card pops out beside her: your 5-hour and weekly limits, right where you work. No dashboards, no browser tabs.',
@@ -59,12 +62,15 @@
       'footer.note': 'Not affiliated with Anthropic, OpenAI, Google or DeepSeek.',
     },
     zh: {
-      'nav.mood': '心情', 'nav.girls': '角色', 'nav.panel': '面板', 'nav.agents': '给 Agent',
+      'nav.video': '视频', 'nav.mood': '心情', 'nav.girls': '角色', 'nav.panel': '面板', 'nav.agents': '给 Agent',
       'hero.eyebrow': '写给 AI 开发者的桌宠',
       'hero.tagline': '你的 AI 编程额度，由猫娘守护。',
       'hero.sub': '她住在你的桌面上，盯着 Claude Code、Codex、Gemini CLI 和 DeepSeek 的用量，心情跟着额度走。额度快见底时，她会先替你慌张。',
       'hero.meta': '免费 · v1.0.1 · Windows 10/11 · 数据只留在你的电脑上',
       'cta.download': '下载 Windows 版', 'cta.star': '★ 在 GitHub 点星', 'cta.source': '查看源码',
+      'video.kicker': '17 秒看懂', 'video.title': '看她替你慌张',
+      'video.text': '从额度满满到「额度耗尽！」只需要几个小节。然后 GPT 娘、Gemini 娘、DeepSeek 娘轮番登场。',
+      'video.sound': '默认静音播放，点按钮开启声音。', 'video.unmute': '🔊 点击开启声音',
       'desk.kicker': '住在你的桌面上',
       'desk.title': '你照常写代码，她帮你盯着额度。',
       'desk.text': '戳她一下，旁边就弹出一张小额度卡：5 小时额度和每周额度，就在你干活的地方。不用开网页，不用看仪表盘。',
@@ -120,6 +126,7 @@
     document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
     for (const el of $$('[data-i18n]')) el.innerHTML = t(el.dataset.i18n);
     $('#lang').textContent = lang === 'zh' ? 'EN' : '中文';
+    setVideoLang();
     renderTray();
     lastMood = null; // re-say the current line in the new language
     updateMood();
@@ -129,6 +136,40 @@
     lang = lang === 'zh' ? 'en' : 'zh';
     storage.set('nq-lang', lang);
     applyLang();
+  });
+
+  // ------------------------------------------------------------------ promo video
+
+  // One video per language. It plays muted while on screen (browsers block autoplay
+  // with sound) and pauses when scrolled away; the button turns the sound on.
+  const video = $('#promo');
+  const soundBtn = $('#sound');
+
+  function setVideoLang() {
+    const file = `assets/video/promo-${lang}.mp4`;
+    if (video.getAttribute('src') === file) return;
+    const wasPlaying = !video.paused;
+    video.poster = `assets/video/poster-${lang}.webp`;
+    video.src = file;
+    if (wasPlaying) video.play().catch(() => {});
+  }
+
+  new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) video.play().catch(() => {});
+        else video.pause();
+      }
+    },
+    { threshold: 0.5 }
+  ).observe(video);
+
+  soundBtn.addEventListener('click', () => {
+    video.muted = false;
+    video.controls = true;
+    video.currentTime = 0;
+    video.play().catch(() => {});
+    soundBtn.hidden = true;
   });
 
   // ------------------------------------------------------------------ reveal on scroll

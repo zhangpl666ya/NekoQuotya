@@ -1379,3 +1379,66 @@ footer {
     transform: none;
   }
 }
+
+/* ---------------- promo video ---------------- */
+
+.video-sec {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 60px;
+}
+
+.video-text p:not(.kicker):not(.demo-note) {
+  color: var(--muted);
+  margin: 16px 0;
+}
+
+.phone {
+  position: relative;
+  /* never taller than the window, so the whole phone fits on screen */
+  width: min(340px, 80vw, calc((100vh - 140px) * 9 / 16));
+  aspect-ratio: 9 / 16;
+  justify-self: center;
+  padding: 10px;
+  border-radius: 42px;
+  background: #1e1b2b;
+  box-shadow: 0 30px 70px rgba(120, 60, 120, 0.3), inset 0 0 0 2px #3a3550;
+}
+
+.phone video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 32px;
+  object-fit: cover;
+  background: #1e1b2b;
+}
+
+.sound {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  translate: -50% 0;
+  padding: 10px 20px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+  font: 800 14px var(--body);
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.sound[hidden] {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .video-sec {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 30px;
+  }
+}

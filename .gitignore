@@ -4,3 +4,6 @@ out/
 dist/
 # Runtime data inside packs (usage ledgers, quota, settings): never committed
 packs/*/data/
+# Promo video: rendered output and high-res art (regenerate with the cutout scripts)
+promo/out/
+promo/assets/

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>NekoQuotya promo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=ZCOOL+KuaiLe&display=block" rel="stylesheet" />
+  <link rel="stylesheet" href="promo.css" />
+</head>
+<body>
+  <!-- 1080×1920 vertical promo. Every frame is computed from a time t by promo.js
+       (window.renderAt), so render.cjs can capture it frame by frame. -->
+  <div id="stage">
+
+    <!-- S1 0–1.875: the question -->
+    <section class="scene" id="s1">
+      <div class="grid-bg"></div>
+      <div class="q q1" id="q1"></div>
+      <div class="q q2" id="q2"></div>
+      <div class="scramble" id="scramble"><span id="scrLabel"></span><b id="scrValue">??%</b></div>
+    </section>
+
+    <!-- S2 1.875–3.75: four girls pop in, logo lands -->
+    <section class="scene pastel" id="s2">
+      <img class="pop" id="pop-claude" src="assets/claude-energetic.webp" />
+      <img class="pop" id="pop-gpt" src="assets/gpt-energetic.webp" />
+      <img class="pop" id="pop-gemini" src="assets/gemini-energetic.webp" />
+      <img class="pop" id="pop-deepseek" src="assets/deepseek-energetic.webp" />
+      <div class="logo" id="logo2"><img src="../build/icon.png" /><span>Neko<em>Quotya</em></span></div>
+      <div class="tagline" id="tag2"></div>
+    </section>
+
+    <!-- S3 3.75–7.5: quota climbs, her mood falls apart -->
+    <section class="scene" id="s3">
+      <div class="alarm" id="alarm"></div>
+      <div class="big-pct" id="bigPct">0%</div>
+      <div class="hud-big" id="hud3">
+        <div class="hud-row"><span id="hud3Label"></span><span class="mood-chip" id="moodChip"></span></div>
+        <div class="track"><div class="fill" id="fill3"></div></div>
+      </div>
+      <div class="bubble" id="bubble3"></div>
+      <img class="hero-girl" id="girl3" src="assets/claude-energetic.webp" />
+      <div class="slam" id="gone"></div>
+      <div class="dim" id="dim3"></div>
+    </section>
+
+    <!-- S4 7.5–9.375: drop, three quick cuts -->
+    <section class="scene" id="s4">
+      <div class="rays" id="rays4"></div>
+      <img class="cut-girl" id="girl4" />
+      <div class="cut-name" id="name4"></div>
+      <div class="cut-tool" id="tool4"></div>
+      <div class="bubble cut-bubble" id="bubble4"></div>
+    </section>
+
+    <!-- S5 9.375–13.125: three features -->
+    <section class="scene pastel" id="s5">
+      <div class="caption"><h2 id="capTitle"></h2><p id="capSub"></p></div>
+      <div class="feature" id="f1">
+        <div class="desk">
+          <div class="win"><div class="win-bar"><i></i><i></i><i></i></div><pre id="code5"></pre></div>
+          <div class="desk-pet" id="deskPet">
+            <div class="desk-bubble" id="deskBubble"></div>
+            <div class="desk-row">
+              <img src="assets/claude-focused.webp" />
+              <div class="hud" id="deskHud">
+                <div><div class="hud-row"><span id="deskL1"></span><b id="deskV1">0%</b></div><div class="track"><div class="fill" id="deskF1"></div></div></div>
+                <div><div class="hud-row"><span id="deskL2"></span><b id="deskV2">0%</b></div><div class="track"><div class="fill" id="deskF2"></div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="taskbar"><img src="../build/icon.png" /><span>14:32</span></div>
+        </div>
+      </div>
+      <div class="feature" id="f2"><div class="tray" id="tray"></div></div>
+      <div class="feature" id="f3">
+        <div class="chart"><div class="chart-head"><b id="hmTitle"></b><span id="hmMeta"></span></div><div class="heatmap" id="heatmap"></div></div>
+        <div class="chart"><div class="chart-head"><b id="trTitle"></b><span id="trMeta"></span></div><div class="trend" id="trend"></div></div>
+      </div>
+      <div class="whip" id="whip"></div>
+    </section>
+
+    <!-- S6 13.125–15: just the icon and the name, nothing to click -->
+    <section class="scene pastel" id="s6">
+      <div class="logo logo-final" id="logo6"><img src="../build/icon.png" /><span>Neko<em>Quotya</em></span></div>
+    </section>
+
+    <div class="flash" id="flash"></div>
+    <div id="sparks"></div>
+  </div>
+  <script src="promo.js"></script>
+</body>
+</html>
