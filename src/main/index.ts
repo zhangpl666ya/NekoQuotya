@@ -11,6 +11,7 @@ import {
   type PetPointer,
   type SessionsView,
   type SettingsSave,
+  type LanguageChoice,
   type SettingsView,
   type UpdateState,
 } from '../shared/ipc.ts';
@@ -73,7 +74,8 @@ app.on('before-quit', (event) => {
 });
 
 async function main(): Promise<void> {
-  locale = resolveLocale(process.env.NEKO_LANG ?? app.getLocale());
+  language = await readLanguage();
+  locale = currentLocale();
   t = translator(locale);
 
   // The project's packs/ in development; a copy in the user folder when installed (packInstall.ts)
@@ -83,8 +85,10 @@ async function main(): Promise<void> {
   sortByOrder(loaded.packs, await readPackOrder());
   servePackAssets(loaded.packs);
 
+  // Windows get a wrapper, so they always use the current language after a switch
+  const tr: typeof t = (key, params) => t(key, params);
   launcher = new Launcher({
-    t,
+    t: tr,
     preload: preloadPath('launcher'),
     loadPage,
     getState: launcherState,
@@ -96,7 +100,7 @@ async function main(): Promise<void> {
   for (const [index, pack] of loaded.packs.entries()) {
     const pet = new PetController(pack, {
       locale,
-      t,
+      t: tr,
       index,
       lines: await loadLines(pack, locale),
       appearance: await loadImageAppearance(pack),
@@ -252,6 +256,11 @@ function registerIpc(): void {
     if (packId === null || (typeof packId === 'string' && pets.has(packId))) setActivePet(packId);
     return settingsView();
   });
+  ipcMain.handle(IPC.settingsSetLanguage, async (event, choice: unknown): Promise<SettingsView | null> => {
+    if (!aux?.isSettings(event.sender.id)) return null;
+    if (choice === 'system' || (typeof choice === 'string' && isLocale(choice))) await setLanguage(choice);
+    return settingsView();
+  });
   ipcMain.on(IPC.settingsResize, (event, height: unknown) => {
     if (aux?.isSettings(event.sender.id) && typeof height === 'number') aux.resizeSettings(height);
   });
@@ -302,9 +311,47 @@ function reorderPacks(order: unknown): void {
     .catch((err: unknown) => console.error('[layout] could not save the card order', err));
 }
 
+// ---- language (Settings → Language; NEKO_LANG still wins for development) ----
+
+let language: LanguageChoice = 'system';
+const preferencesFile = () => path.join(app.getPath('userData'), 'preferences.json');
+
+async function readLanguage(): Promise<LanguageChoice> {
+  try {
+    const saved = JSON.parse(await fs.readFile(preferencesFile(), 'utf8')) as { language?: unknown };
+    const value = saved.language;
+    return value === 'system' || (typeof value === 'string' && isLocale(value)) ? value : 'system';
+  } catch {
+    return 'system';
+  }
+}
+
+function currentLocale(): Locale {
+  if (process.env.NEKO_LANG) return resolveLocale(process.env.NEKO_LANG);
+  return language === 'system' ? resolveLocale(app.getLocale()) : language;
+}
+
+/** Switch every window to the new language without restarting */
+async function setLanguage(choice: LanguageChoice): Promise<void> {
+  language = choice;
+  await fs
+    .mkdir(path.dirname(preferencesFile()), { recursive: true })
+    .then(() => fs.writeFile(preferencesFile(), JSON.stringify({ language }, null, 2)))
+    .catch((err: unknown) => console.error('[preferences] could not save the language', err));
+  const next = currentLocale();
+  if (next === locale) return;
+  locale = next;
+  t = translator(locale);
+  launcher?.applyLanguage();
+  for (const pet of pets.values()) pet.setLanguage(locale, await loadLines(pet.pack, locale));
+  for (const id of pets.keys()) aux?.notifySessions(id);
+  launcher?.push();
+}
+
 function settingsView(): SettingsView {
   return {
     locale,
+    language,
     packs: [...pets.values()].map((pet) => ({
       id: pet.pack.id,
       name: packName(pet.pack.manifest, locale),

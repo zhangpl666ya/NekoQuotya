@@ -38,7 +38,7 @@ function makePacksRoot(packs: Record<string, unknown>): string {
 
 const valid = {
   id: 'claude',
-  name: 'Claude-chan',
+  name: 'Claude',
   version: 1,
   packFormat: 1,
   source: { tokscaleClients: ['claude'], quotaProvider: 'Claude', watch: [{ path: '~/.claude/projects' }] },
@@ -90,10 +90,10 @@ test('a client can belong to only one pack; the later pack is rejected', async (
 });
 
 test('pack names: a plain string or a per-locale map with English fallback', () => {
-  const localized = PackManifestSchema.parse({ ...valid, name: { en: 'Claude-chan', 'zh-CN': 'Claude 娘' } });
-  assert.equal(packName(localized, 'zh-CN'), 'Claude 娘');
-  assert.equal(packName(localized, 'ja'), 'Claude-chan');
-  assert.equal(packName(PackManifestSchema.parse(valid), 'zh-CN'), 'Claude-chan');
+  const localized = PackManifestSchema.parse({ ...valid, name: { en: 'Kimi', 'zh-CN': '月之暗面 Kimi' } });
+  assert.equal(packName(localized, 'zh-CN'), '月之暗面 Kimi');
+  assert.equal(packName(localized, 'ja'), 'Kimi');
+  assert.equal(packName(PackManifestSchema.parse(valid), 'zh-CN'), 'Claude');
 });
 
 test('theme: a brand colour with an optional gradient; neutral gray by default', () => {

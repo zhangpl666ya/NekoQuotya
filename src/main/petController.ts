@@ -61,7 +61,7 @@ export interface PetControllerDeps {
 
 export class PetController {
   readonly pack: LoadedPack;
-  private readonly deps: PetControllerDeps;
+  private deps: PetControllerDeps;
   private readonly brain: PetBrain;
   private win: BrowserWindow | null = null;
   private state: PetState = { visible: true, position: null };
@@ -133,6 +133,16 @@ export class PetController {
     this.override = pickOverride(override);
     this.push(this.brain.setRules(this.behavior(), Date.now()));
     await writeJsonAtomic(this.settingsFile(), { behavior: this.override });
+  }
+
+  /** After a language switch: the pet page reloads and picks up the new locale and lines */
+  setLanguage(locale: Locale, lines: Lines): void {
+    this.deps = { ...this.deps, locale, lines };
+    const win = this.win;
+    if (!win || win.isDestroyed()) return;
+    this.lastSentKey = '';
+    this.lastHudKey = '';
+    win.webContents.reload();
   }
 
   initPayload(): PetInit {

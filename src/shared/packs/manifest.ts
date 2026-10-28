@@ -63,7 +63,7 @@ export function applyBehaviorOverride(base: Behavior, override: unknown): Behavi
 
 export const PackManifestSchema = z.object({
   id: z.string().regex(idPattern, 'id may contain only lowercase letters, digits and hyphens'),
-  /** Display name. A string, or a map of locale → name, e.g. { "en": "Claude-chan", "zh-CN": "Claude 娘" } */
+  /** Display name. A string, or a map of locale → name, e.g. "Claude" or { "en": "Kimi", "zh-CN": "月之暗面 Kimi" } */
   name: z.union([z.string().min(1), z.record(z.string(), z.string().min(1))]),
   version: z.number().int().positive(),
   packFormat: z.literal(PACK_FORMAT),

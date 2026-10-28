@@ -1,8 +1,12 @@
 # NekoQuotya
 
-A desktop pet in the style of an AI-girl character that watches your AI coding tools' token usage and subscription quotas. Design: [docs/architecture.md](docs/architecture.md).
+**She knows before your quota runs out.** A desktop pet that watches your AI coding tools' token usage and subscription quotas, and her mood follows them. Design: [docs/architecture.md](docs/architecture.md).
 
-**🌸 Website: [zhangpl666ya.github.io/NekoQuotya](https://zhangpl666ya.github.io/NekoQuotya/)**
+<p align="center">
+  <a href="https://zhangpl666ya.github.io/NekoQuotya/"><img src="docs/images/quota-climb.gif" width="260" alt="Claude's quota climbing from 0% to QUOTA GONE"></a>
+</p>
+
+**🌸 Website: [zhangpl666ya.github.io/NekoQuotya](https://zhangpl666ya.github.io/NekoQuotya/)** · 17-second promo video (中文 / English) on the site and in [`promo/final/`](promo/final/)
 
 [![NekoQuotya landing page](docs/images/preview.jpg)](https://zhangpl666ya.github.io/NekoQuotya/)
 
@@ -16,12 +20,12 @@ Characters (one pet on the desktop at a time, chosen in Settings):
 
 | Pack | Tool it watches | Quota | Mood follows |
 |---|---|---|---|
-| Claude-chan | Claude Code (`~/.claude`) | Claude subscription | quota % |
-| GPT-chan | Codex CLI (`~/.codex`) | ChatGPT subscription | quota % |
-| Gemini-chan | Gemini CLI (`~/.gemini`) | — | daily token budget |
-| DeepSeek-chan | DeepSeek Harness (`~/.dsh`) | — (API billing) | daily token budget |
+| Claude | Claude Code (`~/.claude`) | Claude subscription | quota % |
+| GPT | Codex CLI (`~/.codex`) | ChatGPT subscription | quota % |
+| Gemini | Gemini CLI (`~/.gemini`) | — | daily token budget |
+| DeepSeek | DeepSeek Harness (`~/.dsh`) | — (API billing) | daily token budget |
 
-Using the pet: click to poke (her quota bars show for a few seconds), drag to move (the position is remembered), double-click to open the panel, right-click for a menu. In the panel, click a card for its activity heatmap, 60-day trend and sessions, and drag cards to reorder them. **Check for updates** in the panel footer asks GitHub for a newer release. Settings has the pet picker, daily budget, mood basis, sleep time and idle chatter. Launch at startup is in the panel footer.
+Using the pet: click to poke (her quota bars show for a few seconds), drag to move (the position is remembered), double-click to open the panel, right-click for a menu. In the panel, click a card for its activity heatmap, 60-day trend and sessions, and drag cards to reorder them. **Check for updates** in the panel footer asks GitHub for a newer release. Settings has the language (system / English / 简体中文), the pet picker, daily budget, mood basis, sleep time and idle chatter. Launch at startup is in the panel footer.
 
 Your data stays on your computer: usage is read locally by tokscale and stored in `%APPDATA%\NekoQuotya\packs\<pack>\data`. Uninstalling leaves that folder in place.
 
@@ -92,7 +96,7 @@ Do **not** edit a built-in pack's `pack.json`: it is replaced when the app updat
 ```json
 {
   "id": "kimi",
-  "name": { "en": "Kimi-chan", "zh-CN": "Kimi 娘" },
+  "name": "Kimi",
   "version": 1,
   "packFormat": 1,
   "source": {

@@ -1,7 +1,7 @@
 {
   "name": "nekoquotya",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "NekoQuotya \u2014 an AI-girl desktop pet that tracks AI coding tools' token usage and quotas (data layer built on tokscale)",
   "type": "module",
   "main": "out/main/index.js",

@@ -30,6 +30,7 @@ export const IPC = {
   settingsGet: SETTINGS_CHANNELS.get,
   settingsSave: SETTINGS_CHANNELS.save,
   settingsSetActive: SETTINGS_CHANNELS.setActive,
+  settingsSetLanguage: SETTINGS_CHANNELS.setLanguage,
   settingsResize: SETTINGS_CHANNELS.resize,
   settingsClose: SETTINGS_CHANNELS.close,
 } as const;
@@ -64,8 +65,12 @@ export interface SettingsPackView {
   defaults: EditableBehavior;
 }
 
+/** The app's language: follow the system, or a fixed one */
+export type LanguageChoice = 'system' | Locale;
+
 export interface SettingsView {
   locale: Locale;
+  language: LanguageChoice;
   packs: SettingsPackView[];
   /** The pack whose pet is on the desktop; only one is shown at a time. null = none */
   activePackId: string | null;

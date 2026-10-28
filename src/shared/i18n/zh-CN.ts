@@ -105,6 +105,8 @@ export const zhCN: Partial<Record<MessageKey, string>> = {
 
   'settings.title': '设置',
   'settings.close': '关闭',
+  'settings.language': '语言',
+  'settings.languageSystem': '跟随系统',
   'settings.pet': '桌宠形象',
   'settings.petNone': '不显示桌宠',
   'settings.dailyBudget': '每日 token 预算',

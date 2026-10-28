@@ -1,9 +1,6 @@
 {
   "id": "gemini",
-  "name": {
-    "en": "Gemini-chan",
-    "zh-CN": "Gemini 娘"
-  },
+  "name": "Gemini",
   "version": 1,
   "packFormat": 1,
   "source": {

@@ -42,6 +42,11 @@ export class Launcher {
     });
   }
 
+  /** After a language switch: texts that were set once */
+  applyLanguage(): void {
+    this.tray.setToolTip(this.deps.t('tray.tooltip'));
+  }
+
   get webContentsId(): number | null {
     return this.panel && !this.panel.isDestroyed() ? this.panel.webContents.id : null;
   }

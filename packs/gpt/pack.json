@@ -1,9 +1,6 @@
 {
   "id": "gpt",
-  "name": {
-    "en": "GPT-chan",
-    "zh-CN": "GPT 娘"
-  },
+  "name": "GPT",
   "version": 1,
   "packFormat": 1,
   "source": {

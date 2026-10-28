@@ -16,7 +16,7 @@ const fixture = (name: string) => readFileSync(new URL(`./fixtures/${name}`, imp
 function makePack(dir = mkdtempSync(path.join(os.tmpdir(), 'neko-pack-')), source: Record<string, unknown> = {}): LoadedPack {
   const manifest = PackManifestSchema.parse({
     id: 'claude',
-    name: 'Claude-chan',
+    name: 'Claude',
     version: 1,
     packFormat: 1,
     source: { tokscaleClients: ['claude'], quotaProvider: 'Claude', ...source },

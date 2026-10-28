@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { translator, type Translate } from '../../shared/i18n/index.ts';
-import type { EditableBehavior, SettingsPackView, SettingsView } from '../../shared/ipc.ts';
+import type { EditableBehavior, LanguageChoice, SettingsPackView, SettingsView } from '../../shared/ipc.ts';
 
 // Settings window (frameless, sized to its content):
 //   1. which character's pet is on the desktop (one at a time)
@@ -46,6 +46,17 @@ export function App() {
     if (packId) setEditing(packId);
   };
 
+  const chooseLanguage = async (choice: LanguageChoice) => {
+    const v = await api.setLanguage(choice);
+    if (v) setView(v);
+  };
+  // Language names are written in their own language, so they read right whatever is selected
+  const LANGUAGES: Array<[LanguageChoice, string]> = [
+    ['system', t('settings.languageSystem')],
+    ['en', 'English'],
+    ['zh-CN', '简体中文'],
+  ];
+
   return (
     <div className="page" ref={root} style={pack ? ({ '--pack': pack.theme.color } as CSSProperties) : undefined}>
       <div className="titlebar">
@@ -54,6 +65,17 @@ export function App() {
           ✕
         </button>
       </div>
+
+      <section className="group">
+        <div className="group-title">{t('settings.language')}</div>
+        <div className="pets">
+          {LANGUAGES.map(([id, label]) => (
+            <button key={id} className={view.language === id ? 'pet active none' : 'pet none'} onClick={() => void chooseLanguage(id)}>
+              {label}
+            </button>
+          ))}
+        </div>
+      </section>
 
       <section className="group">
         <div className="group-title">{t('settings.pet')}</div>

@@ -30,45 +30,47 @@
   const TEXT = {
     zh: {
       q1: '你的 AI 额度', q2: '还剩多少？', scr: '5 小时',
-      tagline: '守护你 AI 额度的桌宠',
+      tagline: '额度用完前，她先慌',
       session: '5 小时 · 已用', moods: { ENERGETIC: '元气', FOCUSED: '专注', SWEATING: '冒汗', PANICKED: '慌张', EXHAUSTED: '累瘫' },
       claude: { ENERGETIC: '今天也很乐意帮你～', FOCUSED: '让我仔细想一想……', SWEATING: '诚实地说，额度有点紧了', PANICKED: '非常抱歉，快用完了！', EXHAUSTED: '对不起……撑不住了……' },
-      gone: '额度耗尽！',
+      gone: '额度耗尽！', knew: '她比你先知道。',
       cuts: [
-        { name: 'GPT 娘', tool: 'Codex CLI', line: '当然可以！✨' },
-        { name: 'Gemini 娘', tool: 'Gemini CLI', line: '喵～冲冲冲！' },
-        { name: 'DeepSeek 娘', tool: 'DeepSeek', line: '<think> 让我想想…' },
+        { name: 'GPT', tool: 'Codex', line: '当然可以！✨' },
+        { name: 'Gemini', tool: 'Gemini', line: '喵～冲冲冲！' },
+        { name: 'DeepSeek', tool: 'DeepSeek', line: '<think> 让我想想…' },
       ],
+      oneEach: '一个工具，一个形象',
       f: [
         { title: '桌面常驻', sub: '戳一下 · 额度一目了然' },
-        { title: '托盘面板', sub: '今日 / 本周 / 本月 / 总计' },
-        { title: '活跃热力图', sub: '近 60 天用量趋势' },
+        { title: '托盘面板', sub: '每个工具的用量，一屏看完' },
+        { title: '活跃热力图', sub: '哪天爆肝，哪天躺平' },
       ],
       deskBubble: 'token 来啦～ ✨', deskL1: '5 小时', deskL2: '每周',
       periods: ['今日', '本周', '本月', '总计'], tokens: 'tokens',
-      names: { claude: 'Claude 娘', gpt: 'GPT 娘', deepseek: 'DeepSeek 娘' },
+      names: { claude: 'Claude', gpt: 'GPT', deepseek: 'DeepSeek' },
       trayMoods: { claude: '专注', gpt: '元气', deepseek: '冒汗' },
       hmTitle: '活跃度', hmMeta: '活跃 126 天', trTitle: '趋势', trMeta: '峰值 28.1M',
     },
     en: {
       q1: 'Your AI quota…', q2: 'how much is left?', scr: '5-hour',
-      tagline: 'A desktop pet for your AI quota',
+      tagline: 'She panics before you run out',
       session: '5-hour · used', moods: { ENERGETIC: 'Energetic', FOCUSED: 'Focused', SWEATING: 'Sweating', PANICKED: 'Panicked', EXHAUSTED: 'Exhausted' },
       claude: { ENERGETIC: 'Happy to help today!', FOCUSED: 'Let me think carefully…', SWEATING: "To be honest, quota's low", PANICKED: "Sorry, we're nearly out!", EXHAUSTED: "I can't go on… sorry…" },
-      gone: 'QUOTA GONE!',
+      gone: 'QUOTA GONE!', knew: 'She knew before you did.',
       cuts: [
-        { name: 'GPT-chan', tool: 'Codex CLI', line: 'Certainly! ✨' },
-        { name: 'Gemini-chan', tool: 'Gemini CLI', line: "Nyaa~ Let's go!" },
-        { name: 'DeepSeek-chan', tool: 'DeepSeek', line: '<think> let me think…' },
+        { name: 'GPT', tool: 'Codex CLI', line: 'Certainly! ✨' },
+        { name: 'Gemini', tool: 'Gemini CLI', line: "Nyaa~ Let's go!" },
+        { name: 'DeepSeek', tool: 'DeepSeek', line: '<think> let me think…' },
       ],
+      oneEach: 'One tool, one girl',
       f: [
         { title: 'On your desktop', sub: 'Tap her · see your quota' },
-        { title: 'Tray panel', sub: 'Today / Week / Month / Total' },
-        { title: 'Activity heatmap', sub: '60-day usage trend' },
+        { title: 'Tray panel', sub: 'Every tool, every period, one screen' },
+        { title: 'Activity heatmap', sub: 'Your busy days, at a glance' },
       ],
       deskBubble: 'Tokens incoming~ ✨', deskL1: '5-hour', deskL2: 'Weekly',
       periods: ['Today', 'Week', 'Month', 'Total'], tokens: 'tokens',
-      names: { claude: 'Claude-chan', gpt: 'GPT-chan', deepseek: 'DeepSeek-chan' },
+      names: { claude: 'Claude', gpt: 'GPT', deepseek: 'DeepSeek' },
       trayMoods: { claude: 'Focused', gpt: 'Energetic', deepseek: 'Sweating' },
       hmTitle: 'ACTIVITY', hmMeta: '126 active days', trTitle: 'TREND', trMeta: 'Peak 28.1M',
     },
@@ -100,6 +102,8 @@
   $('tag2').textContent = TEXT.tagline;
   $('hud3Label').textContent = TEXT.session;
   $('gone').textContent = TEXT.gone;
+  $('knew').textContent = TEXT.knew;
+  $('oneEach').textContent = TEXT.oneEach;
   $('deskBubble').textContent = TEXT.deskBubble;
   $('deskL1').textContent = TEXT.deskL1;
   $('deskL2').textContent = TEXT.deskL2;
@@ -183,7 +187,8 @@
     const scr = $('scramble');
     const on = t > 0.5;
     set(scr, { opacity: String(on ? 1 : 0), transform: `translateY(${on ? 0 : 40}px)` });
-    $('scrValue').textContent = t < 1.55 ? `${String(Math.floor(Math.abs(noise(Math.floor(t * 16), 3)) * 99)).padStart(2, '0')}%` : '??%';
+    $('scrValue').textContent =
+      t < 1.15 ? `${String(Math.floor(Math.abs(noise(Math.floor(t * 16), 3)) * 99)).padStart(2, '0')}%` : t < 1.55 ? '87%' : '??%';
     $('q2').style.transform += ` rotate(${Math.sin(t * 9) * 2}deg)`;
   });
 
@@ -258,6 +263,8 @@
       transform: `translate(${noise(t, 7) * gShake}px, ${noise(t, 8) * gShake}px) scale(${lerp(3, 1, easeInCubic(gk))}) rotate(-4deg)`,
     });
     set($('dim3'), { opacity: String(prog(t, S4 - 0.3, S4 - 0.05) * 0.55) });
+    const kk = prog(t, S3_FULL + 0.18, S3_FULL + 0.32);
+    set($('knew'), { opacity: String(kk), transform: `translateY(${lerp(24, 0, easeOutCubic(kk))}px)` });
   });
 
   // S4: the drop. Three cuts, 0.625 s each, each girl in her brand colours
@@ -279,6 +286,8 @@
     const zk = easeOutCubic(prog(k, 0, 0.16));
     set(girl, { transform: `translateX(-50%) scale(${lerp(1.45, 1, zk) + k * 0.06}) rotate(${(i - 1) * 3 * (1 - zk)}deg)` });
     $('rays4').style.transform = `rotate(${t * 40}deg) scale(${1 + beatPulse(t, S4) * 0.06})`;
+    const ok = prog(local, 0.05, 0.2);
+    set($('oneEach'), { opacity: String(ok), transform: `translate(-50%, ${lerp(30, 0, easeOutCubic(ok))}px)` });
     $('name4').textContent = text.name;
     $('tool4').textContent = text.tool;
     const nk = prog(k, 0.04, 0.16);

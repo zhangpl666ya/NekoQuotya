@@ -11,7 +11,7 @@ const T0 = new Date(2026, 9, 27, 10).getTime();
 
 function rules(behavior: Record<string, unknown> = {}): BrainRules {
   return PackManifestSchema.parse({
-    id: 'claude', name: 'Claude-chan', version: 1, packFormat: 1,
+    id: 'claude', name: 'Claude', version: 1, packFormat: 1,
     source: { tokscaleClients: ['claude'] },
     behavior: { chatterMinutes: null, ...behavior },
   }).behavior;

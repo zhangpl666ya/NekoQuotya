@@ -814,3 +814,42 @@ body.en #tag2 {
   padding: 14px 34px;
   border-radius: 999px;
 }
+
+/* "She knew before you did" under QUOTA GONE: drawn above the dimming layer */
+.knew {
+  position: absolute;
+  left: 50%;
+  top: 1700px;
+  translate: -50% 0;
+  padding: 22px 54px;
+  border-radius: 999px;
+  background: rgba(30, 26, 43, 0.88);
+  color: #fff;
+  font-size: 66px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+}
+
+/* "One tool, one girl" at the bottom of the drop */
+.one-each {
+  position: absolute;
+  left: 50%;
+  bottom: 70px;
+  padding: 18px 44px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #2b2433;
+  font-size: 54px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+}
+
+body.zh .knew,
+body.zh .one-each {
+  font-family: 'ZCOOL KuaiLe', 'Fredoka', 'Microsoft YaHei', sans-serif;
+  font-weight: 400;
+}

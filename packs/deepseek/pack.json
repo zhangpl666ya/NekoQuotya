@@ -1,9 +1,6 @@
 {
   "id": "deepseek",
-  "name": {
-    "en": "DeepSeek-chan",
-    "zh-CN": "DeepSeek 娘"
-  },
+  "name": "DeepSeek",
   "version": 1,
   "packFormat": 1,
   "source": {

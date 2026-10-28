@@ -112,6 +112,8 @@ export const en = {
   // ---- settings window ----
   'settings.title': 'Settings',
   'settings.close': 'Close',
+  'settings.language': 'Language',
+  'settings.languageSystem': 'System',
   'settings.pet': 'Desktop pet',
   'settings.petNone': 'Hide pet',
   'settings.dailyBudget': 'Daily token budget',

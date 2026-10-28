@@ -74,7 +74,7 @@ packs/claude/
 ```jsonc
 {
   "id": "claude",
-  "name": { "en": "Claude-chan", "zh-CN": "Claude 娘" },  // or a plain string
+  "name": "Claude",  // or per locale: { "en": "…", "zh-CN": "…" }
   "version": 1,
   "packFormat": 1,                       // manifest format version, for compatibility checks
 
@@ -397,6 +397,8 @@ Key points:
 - Each card has period tabs, Today / This week (from Monday) / This month / Total, showing that period's tokens (computed from the ledger plus today; `src/shared/stats.ts`). Clicking the card opens the pack's **session window**: the same periods, one row per session with tokens, input, output, cache, messages, models and dates, plus a badge for sessions whose logs were cleaned up. Sessions have no titles, because that would mean reading conversation content.
 - The header's **Settings** button opens the settings window: frameless like the panel, with its own title bar, and sized to its content. Its first section picks which pack's pet is on the desktop (only one pet at a time, or none); the panel's pet toggle follows the same rule. Below it is the selected pack's card: mood basis (only for tools with a subscription quota), daily budget (only when the mood follows the budget, i.e. API billing or the user chose it), idle-sleep minutes and idle chatter. Changes are saved as an override in that pack's `data/settings.json`, leaving `pack.json` untouched, and apply to the pet at once.
 - The session window opens with an activity heatmap (last 26 weeks, one cell per day, shaded by quartile of active tokens) and a trend bar chart (last 60 days, peak day highlighted), both from the ledger plus today (`stats.ts → dailyTotals`).
+- Settings → **Language**: follow the system, English or 简体中文, saved in `<userData>/preferences.json` and applied live (the panel and session windows re-render, each pet page reloads with its lines in the new language). `NEKO_LANG` still overrides it for development.
+- Characters are named after their tool only: Claude, GPT, Gemini, DeepSeek (no "-chan" / "娘").
 - The panel footer has **Check for updates**: main asks `api.github.com/repos/zhangpl666ya/NekoQuotya/releases/latest` (via `net.fetch`, so the system proxy applies), compares the tag with `app.getVersion()` (`shared/version.ts`), and offers to open the release page. Nothing is downloaded or installed automatically.
 - Each pack has `lines/en.json` and `lines/zh-CN.json` with its character's voice (Claude: polite and careful; GPT: confident "Certainly!"; Gemini: sparkly cat; DeepSeek: frugal maid who thinks out loud). Missing keys fall back to the core lines in `shared/lines.ts`.
 - The landing page lives in `site/` (static, no build) and is published to GitHub Pages by `.github/workflows/pages.yml`.
