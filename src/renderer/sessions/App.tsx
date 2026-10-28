@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type CSSProperties } from 'react';
 import { translator } from '../../shared/i18n/index.ts';
 import type { SessionsView } from '../../shared/ipc.ts';
 import { PERIODS, type Period } from '../../shared/stats.ts';
+import { Heatmap, Trend } from './Charts.tsx';
 
 // Session window: one pack's usage per session for a period, from the ledger.
 // Sessions have no titles (that would mean reading conversation content), so they
@@ -40,6 +41,11 @@ export function App() {
           ))}
         </div>
       </header>
+
+      <div className="charts">
+        <Heatmap daily={view.daily} today={view.today} t={t} locale={view.locale} fmt={fmt} />
+        <Trend daily={view.daily} today={view.today} t={t} locale={view.locale} fmt={fmt} />
+      </div>
 
       <p className="summary">
         {t('sessions.summary', {

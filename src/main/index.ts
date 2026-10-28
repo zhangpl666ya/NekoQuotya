@@ -12,16 +12,19 @@ import {
   type SessionsView,
   type SettingsSave,
   type SettingsView,
+  type UpdateState,
 } from '../shared/ipc.ts';
 import { packName } from '../shared/packs/manifest.ts';
 import { loadPacks, type PackLoadError } from '../shared/packs/registry.ts';
-import { allPeriodTotals, PERIODS, periodTotals, sessionRows, type Period } from '../shared/stats.ts';
+import { allPeriodTotals, dailyTotals, PERIODS, periodTotals, sessionRows, type Period } from '../shared/stats.ts';
+import { localDate } from '../shared/usage.ts';
 import type { PackSnapshot } from '../shared/types.ts';
 import { AuxWindows, type AuxPage } from './auxWindows.ts';
 import { CollectorClient } from './collectorClient.ts';
 import { Launcher } from './launcher.ts';
 import { assetBase, cardArtUrl, loadImageAppearance, loadLines, registerPackScheme, servePackAssets } from './packAssets.ts';
 import { resolvePacksRoot } from './packInstall.ts';
+import { checkForUpdate, openReleasePage } from './updateCheck.ts';
 import { PetController } from './petController.ts';
 
 // The app: one pet window per pack, a tray icon with the launcher panel, and the
@@ -47,6 +50,7 @@ let collector: CollectorClient | null = null;
 let refreshing = false;
 let quotaChecking = false;
 let quitting = false;
+let update: UpdateState = { state: 'idle' };
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
@@ -190,6 +194,18 @@ function registerIpc(): void {
         if (pet) aux?.openSessions(pet.pack.id, `${packName(pet.pack.manifest, locale)} · ${t('sessions.title')}`);
         return;
       }
+      case 'checkUpdate':
+        if (update.state === 'checking') return;
+        update = { state: 'checking' };
+        launcher?.push();
+        void checkForUpdate().then((result) => {
+          update = result;
+          launcher?.push();
+        });
+        return;
+      case 'openUpdate':
+        if (update.state === 'available') openReleasePage();
+        return;
       case 'reorder':
         reorderPacks(command.order);
         return;
@@ -219,6 +235,8 @@ function registerIpc(): void {
       totals: periodTotals(snap ?? empty, p, Date.now()),
       rows: rows.slice(0, MAX_SESSION_ROWS),
       truncated: rows.length > MAX_SESSION_ROWS,
+      daily: dailyTotals(snap ?? empty, Date.now()),
+      today: localDate(Date.now()),
     };
   });
 
@@ -332,6 +350,7 @@ function launcherState(): LauncherState {
     refreshing,
     autostart: app.isPackaged && app.getLoginItemSettings().openAtLogin,
     autostartAvailable: app.isPackaged,
+    update,
   };
 }
 

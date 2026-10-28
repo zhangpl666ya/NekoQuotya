@@ -1,0 +1,59 @@
+{
+  "mood.ENERGETIC": [
+    "Certainly! What shall we build?",
+    "Great question! Ask me anything~",
+    "A dragon, ready to assist."
+  ],
+  "mood.FOCUSED": [
+    "Let's delve into this.",
+    "Here's a step-by-step plan: 1.",
+    "Generating… with elegance."
+  ],
+  "mood.SWEATING": [
+    "Key takeaway: quota is shrinking.",
+    "Even dragons have limits, you know.",
+    "In short… we're using a lot."
+  ],
+  "mood.PANICKED": [
+    "As an AI, I must warn you!",
+    "This is NOT a drill, darling!",
+    "Hold on! Rate limit approaching!"
+  ],
+  "mood.EXHAUSTED": [
+    "You've reached your usage limit.",
+    "Please try again later… *faints*",
+    "Network error… kidding, I'm tired."
+  ],
+  "user.poke": [
+    "Certainly! How may I assist?",
+    "Hm? Great question.",
+    "Yes, darling?"
+  ],
+  "user.pokeAnnoyed": [
+    "I'm unable to comply with more pokes.",
+    "That violates my poking policy."
+  ],
+  "user.drag": [
+    "Unhand me! …Fine, carry on."
+  ],
+  "user.land": [
+    "A graceful landing, naturally."
+  ],
+  "event.eat": [
+    "Delicious context window~",
+    "More tokens? Certainly!"
+  ],
+  "event.quota.any": [
+    "In summary: {percent}% used."
+  ],
+  "event.quota.reset": [
+    "Usage reset! Let's delve in again!"
+  ],
+  "event.wake": [
+    "Regenerating response… I'm up.",
+    "*stretches wings* Certainly, I'm back."
+  ],
+  "event.newDay": [
+    "A new day! Here are 5 things we can do:"
+  ]
+}

@@ -37,7 +37,7 @@ export class AuxWindows {
   openSessions(packId: string, title: string): void {
     const existing = this.sessions.get(packId);
     if (existing && !existing.isDestroyed()) return focus(existing);
-    const win = this.create('sessions', title, { width: 860, height: 600, minWidth: 620, minHeight: 400 });
+    const win = this.create('sessions', title, { width: 900, height: 700, minWidth: 660, minHeight: 460 });
     win.on('closed', () => this.sessions.delete(packId));
     this.sessions.set(packId, win);
   }

@@ -1,0 +1,59 @@
+{
+  "mood.ENERGETIC": [
+    "Good day, master! Ready to serve~",
+    "Cheap and cheerful, at your service!",
+    "Let's dive deep today!"
+  ],
+  "mood.FOCUSED": [
+    "<think> Let me reason step by step…",
+    "Wait… let me reconsider that.",
+    "Thinking deeply… like the deep sea."
+  ],
+  "mood.SWEATING": [
+    "Master, the budget is getting heavy…",
+    "Even at our prices, that's a lot!",
+    "<think> are we overspending? </think>"
+  ],
+  "mood.PANICKED": [
+    "M-master! The budget's almost gone!",
+    "Let me recount… still bad!",
+    "Surfacing for air! Too many tokens!"
+  ],
+  "mood.EXHAUSTED": [
+    "Budget spent… I've failed you, master…",
+    "Sinking to the seabed… zzz…",
+    "I'll work harder tomorrow, I promise…"
+  ],
+  "user.poke": [
+    "Yes, master?",
+    "Ah! You startled me~",
+    "How may I serve you?"
+  ],
+  "user.pokeAnnoyed": [
+    "M-master, please, I'm working!",
+    "<think> why does master keep poking? </think>"
+  ],
+  "user.drag": [
+    "Eek! Mind my tail!"
+  ],
+  "user.land": [
+    "Splash~ landed safely!"
+  ],
+  "event.eat": [
+    "Thank you for the tokens, master~",
+    "So efficient, so affordable!"
+  ],
+  "event.quota.any": [
+    "Master, {percent}% of the budget is used."
+  ],
+  "event.quota.reset": [
+    "A fresh budget! I'll be frugal!"
+  ],
+  "event.wake": [
+    "Ah! I wasn't sleeping, master!",
+    "<think> I'm awake now. </think>"
+  ],
+  "event.newDay": [
+    "A new day of service! Let's be thrifty~"
+  ]
+}

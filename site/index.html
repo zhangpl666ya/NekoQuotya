@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NekoQuotya — your AI quota, guarded by a cat-girl</title>
+  <meta name="description" content="A desktop pet that watches your Claude Code, Codex, Gemini CLI and DeepSeek token usage and subscription quotas. Her mood follows your quota." />
+  <meta property="og:title" content="NekoQuotya" />
+  <meta property="og:description" content="Your AI coding quota, guarded by a cat-girl on your desktop." />
+  <meta property="og:image" content="assets/icon.webp" />
+  <link rel="icon" href="assets/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ============ nav ============ -->
+  <nav class="nav">
+    <a class="brand" href="#top"><img src="assets/icon.webp" alt="" width="32" height="32" />NekoQuotya</a>
+    <div class="nav-links">
+      <a href="#mood" data-i18n="nav.mood">Mood</a>
+      <a href="#girls" data-i18n="nav.girls">Meet the girls</a>
+      <a href="#panel" data-i18n="nav.panel">Panel</a>
+      <a href="#agents" data-i18n="nav.agents">For agents</a>
+    </div>
+    <div class="nav-actions">
+      <button class="lang" id="lang" type="button" aria-label="Switch language">中文</button>
+      <a class="btn btn-small" href="https://github.com/zhangpl666ya/NekoQuotya" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </nav>
+
+  <!-- ============ hero ============ -->
+  <header class="hero" id="top">
+    <div class="hero-girls" aria-hidden="true">
+      <img class="hg hg-claude" src="assets/claude-energetic.webp" alt="" />
+      <img class="hg hg-gpt" src="assets/gpt-energetic.webp" alt="" />
+      <img class="hg hg-gemini" src="assets/gemini-energetic.webp" alt="" />
+      <img class="hg hg-deepseek" src="assets/deepseek-energetic.webp" alt="" />
+      <span class="spark s1">✦</span><span class="spark s2">✧</span><span class="spark s3">✦</span>
+      <span class="spark s4">✧</span><span class="spark s5">♡</span><span class="spark s6">✦</span>
+    </div>
+    <div class="hero-text">
+      <p class="eyebrow" data-i18n="hero.eyebrow">A desktop pet for AI developers</p>
+      <h1>Neko<span>Quotya</span></h1>
+      <p class="tagline" data-i18n="hero.tagline">Your AI coding quota, guarded by a cat-girl.</p>
+      <p class="sub" data-i18n="hero.sub">She sits on your desktop, watches your Claude Code, Codex, Gemini CLI and DeepSeek usage, and her mood follows your quota. Panicking before you hit the limit, so you don't have to.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://github.com/zhangpl666ya/NekoQuotya/releases/latest" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M3 5.5 10 4.5v7H3zm0 13L10 19.5v-7H3zM11 4.4 21 3v8.5H11zm0 15.2L21 21v-8.5H11z"/></svg>
+          <span data-i18n="cta.download">Download for Windows</span>
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/zhangpl666ya/NekoQuotya" target="_blank" rel="noopener" data-i18n="cta.star">★ Star on GitHub</a>
+      </div>
+      <p class="meta" data-i18n="hero.meta">Free · v1.0.1 · Windows 10/11 · data never leaves your PC</p>
+    </div>
+    <a class="scroll-hint" href="#desktop" aria-label="Scroll"><span></span></a>
+  </header>
+
+  <!-- ============ desktop demo ============ -->
+  <section class="section desktop-sec" id="desktop">
+    <div class="section-head reveal">
+      <p class="kicker" data-i18n="desk.kicker">Lives on your desktop</p>
+      <h2 data-i18n="desk.title">Code as usual. She keeps an eye on the meter.</h2>
+      <p data-i18n="desk.text">Tap her and a tiny quota card pops out beside her: your 5-hour and weekly limits, right where you work. No dashboards, no browser tabs.</p>
+    </div>
+    <div class="desktop reveal" id="desktopDemo">
+      <div class="window">
+        <div class="window-bar"><i></i><i></i><i></i><span>refactor.ts — your project</span></div>
+        <pre class="code" id="code"></pre>
+      </div>
+      <div class="desk-pet">
+        <div class="desk-bubble" data-i18n="desk.bubble">Tokens incoming~ ✨</div>
+        <div class="desk-row">
+          <img class="desk-girl" src="assets/claude-focused.webp" alt="Claude-chan on the desktop" />
+          <div class="hud" style="--pack:#D97757;--pack-fill:#D97757">
+            <div class="hud-item"><div class="hud-row"><span class="hud-label" data-i18n="quota.session">5-hour</span><span class="hud-value" data-count="62">0%</span></div><div class="hud-track"><div class="hud-fill" data-w="62"></div></div></div>
+            <div class="hud-item"><div class="hud-row"><span class="hud-label" data-i18n="quota.weekly">Weekly</span><span class="hud-value" data-count="24">0%</span></div><div class="hud-track"><div class="hud-fill" data-w="24"></div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="taskbar"><span class="tray-dot"><img src="assets/icon.webp" alt="" /></span><span class="clock">14:32</span></div>
+    </div>
+  </section>
+
+  <!-- ============ scroll-driven mood ============ -->
+  <section class="mood-sec" id="mood">
+    <div class="mood-sticky">
+      <div class="mood-grid">
+        <div class="mood-stage">
+          <div class="mood-bubble" id="moodBubble">Let's ship something today! ✨</div>
+          <div class="mood-glow" id="moodGlow"></div>
+          <img class="mood-girl" id="moodGirl" src="assets/claude-energetic.webp" alt="The pet's current mood" />
+          <div class="mood-floor"></div>
+        </div>
+        <div class="mood-side">
+          <p class="kicker" data-i18n="mood.kicker">Scroll to burn tokens</p>
+          <h2 data-i18n="mood.title">Her mood <em>is</em> your quota.</h2>
+          <div class="pick" id="pick" role="tablist">
+            <button data-pack="claude" class="active" style="--c:#D97757">Claude</button>
+            <button data-pack="gpt" style="--c:#1F1F1F">GPT</button>
+            <button data-pack="gemini" style="--c:#8E75D6">Gemini</button>
+            <button data-pack="deepseek" style="--c:#4D6BFE">DeepSeek</button>
+          </div>
+          <div class="hud hud-big" id="moodHud">
+            <div class="hud-item"><div class="hud-row"><span class="hud-label" id="moodBarLabel" data-i18n="quota.session">5-hour</span><span class="hud-value" id="moodPct">0%</span></div><div class="hud-track"><div class="hud-fill" id="moodFill"></div></div></div>
+            <div class="hud-item"><div class="hud-row"><span class="hud-label" data-i18n="quota.weekly">Weekly</span><span class="hud-value" id="moodWeek">0%</span></div><div class="hud-track"><div class="hud-fill" id="moodWeekFill"></div></div></div>
+          </div>
+          <ol class="ladder" id="ladder">
+            <li data-mood="ENERGETIC"><b data-i18n="mood.ENERGETIC">Energetic</b><span>0–30%</span></li>
+            <li data-mood="FOCUSED"><b data-i18n="mood.FOCUSED">Focused</b><span>30–60%</span></li>
+            <li data-mood="SWEATING"><b data-i18n="mood.SWEATING">Sweating</b><span>60–80%</span></li>
+            <li data-mood="PANICKED"><b data-i18n="mood.PANICKED">Panicked</b><span>80–95%</span></li>
+            <li data-mood="EXHAUSTED"><b data-i18n="mood.EXHAUSTED">Exhausted</b><span>95%+</span></li>
+            <li data-mood="SLEEPING"><b data-i18n="mood.SLEEPING">Sleeping</b><span data-i18n="mood.idle">idle</span></li>
+          </ol>
+          <p class="mood-note" id="moodNote" data-i18n="mood.note">Subscription tools follow the quota %. API-billed tools follow a daily token budget you set.</p>
+        </div>
+      </div>
+      <div class="mood-progress"><div id="moodProgress"></div></div>
+    </div>
+  </section>
+
+  <!-- ============ meet the girls ============ -->
+  <section class="section" id="girls">
+    <div class="section-head reveal">
+      <p class="kicker" data-i18n="girls.kicker">Meet the girls</p>
+      <h2 data-i18n="girls.title">One character per AI tool</h2>
+      <p data-i18n="girls.text">Pick who lives on your desktop. Each one watches her own tool, wears its colours, and reacts to its usage.</p>
+    </div>
+    <div class="girls">
+      <article class="girl reveal" style="--c:#D97757;--fill:#D97757">
+        <img class="girl-art" src="assets/claude-card.webp" alt="Claude-chan" loading="lazy" />
+        <img class="girl-chibi" src="assets/claude-energetic.webp" alt="" loading="lazy" />
+        <div class="girl-info"><h3 data-i18n="girls.claude.name">Claude-chan</h3><p>Claude Code</p><span class="tag" data-i18n="tag.quota">follows quota</span></div>
+      </article>
+      <article class="girl reveal" style="--c:#1F1F1F;--fill:#1F1F1F">
+        <img class="girl-art" src="assets/gpt-card.webp" alt="GPT-chan" loading="lazy" />
+        <img class="girl-chibi" src="assets/gpt-energetic.webp" alt="" loading="lazy" />
+        <div class="girl-info"><h3 data-i18n="girls.gpt.name">GPT-chan</h3><p>Codex CLI</p><span class="tag" data-i18n="tag.quota">follows quota</span></div>
+      </article>
+      <article class="girl reveal" style="--c:#8E75D6;--fill:linear-gradient(90deg,#4285F4,#9B72CB,#D96570)">
+        <img class="girl-art" src="assets/gemini-card.webp" alt="Gemini-chan" loading="lazy" />
+        <img class="girl-chibi" src="assets/gemini-energetic.webp" alt="" loading="lazy" />
+        <div class="girl-info"><h3 data-i18n="girls.gemini.name">Gemini-chan</h3><p>Gemini CLI</p><span class="tag" data-i18n="tag.budget">follows budget</span></div>
+      </article>
+      <article class="girl reveal" style="--c:#4D6BFE;--fill:#4D6BFE">
+        <img class="girl-art" src="assets/deepseek-card.webp" alt="DeepSeek-chan" loading="lazy" />
+        <img class="girl-chibi" src="assets/deepseek-energetic.webp" alt="" loading="lazy" />
+        <div class="girl-info"><h3 data-i18n="girls.deepseek.name">DeepSeek-chan</h3><p>DeepSeek Harness</p><span class="tag" data-i18n="tag.budget">follows budget</span></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ tray panel ============ -->
+  <section class="section panel-sec" id="panel">
+    <div class="panel-text reveal">
+      <p class="kicker" data-i18n="panel.kicker">One click in the tray</p>
+      <h2 data-i18n="panel.title">Every tool, every period, at a glance</h2>
+      <ul class="checks">
+        <li data-i18n="panel.l1">Today, this week, this month and all-time tokens per tool</li>
+        <li data-i18n="panel.l2">Subscription quota bars with reset times</li>
+        <li data-i18n="panel.l3">Click a card for an activity heatmap, a 60-day trend and per-session details</li>
+        <li data-i18n="panel.l4">Drag cards to reorder them</li>
+      </ul>
+      <p class="demo-note" data-i18n="panel.demo">Interactive demo. Try the tabs. Numbers are examples.</p>
+    </div>
+    <div class="tray reveal" id="tray">
+      <div class="tray-head"><b>NekoQuotya</b><span><i data-i18n="panel.refresh">Refresh</i><i data-i18n="panel.settings">Settings</i></span></div>
+      <div class="tray-body" id="trayBody"></div>
+    </div>
+  </section>
+
+  <!-- ============ features ============ -->
+  <section class="section" id="features">
+    <div class="section-head reveal">
+      <p class="kicker" data-i18n="feat.kicker">Why it's nice to have</p>
+      <h2 data-i18n="feat.title">Cute outside, careful inside</h2>
+    </div>
+    <div class="features">
+      <div class="feat reveal"><span class="feat-icon">🔒</span><h3 data-i18n="feat.local.t">100% local</h3><p data-i18n="feat.local.p">Usage is read from your own log files by tokscale. No account, no server, no telemetry.</p></div>
+      <div class="feat reveal"><span class="feat-icon">📒</span><h3 data-i18n="feat.ledger.t">Never loses a session</h3><p data-i18n="feat.ledger.p">A per-session ledger keeps your history even after the AI tool cleans up its logs.</p></div>
+      <div class="feat reveal"><span class="feat-icon">⚡</span><h3 data-i18n="feat.live.t">Live in seconds</h3><p data-i18n="feat.live.p">She watches the log folders and reacts within seconds of your next prompt.</p></div>
+      <div class="feat reveal"><span class="feat-icon">🎚️</span><h3 data-i18n="feat.mood.t">Quota or budget</h3><p data-i18n="feat.mood.p">Subscriptions follow the 5-hour and weekly quota. API billing follows a daily token budget.</p></div>
+      <div class="feat reveal"><span class="feat-icon">🧩</span><h3 data-i18n="feat.packs.t">Add your own girl</h3><p data-i18n="feat.packs.p">Each character is a folder: pack.json plus a few PNGs. Any tool tokscale supports can get one.</p></div>
+      <div class="feat reveal"><span class="feat-icon">🌏</span><h3 data-i18n="feat.lang.t">English & 中文</h3><p data-i18n="feat.lang.p">The whole app follows your system language.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ agents ============ -->
+  <section class="section agents-sec" id="agents">
+    <div class="section-head reveal">
+      <p class="kicker" data-i18n="agents.kicker">For AI agents</p>
+      <h2 data-i18n="agents.title">Let your agent set her up</h2>
+      <p data-i18n="agents.text">The README has a section written for coding agents: where every file lives, how to check detection, change the budget, or add a character for a new tool. Paste this into Claude Code or Codex:</p>
+    </div>
+    <div class="code-card reveal">
+      <button class="copy" id="copy" type="button" data-i18n="agents.copy">Copy</button>
+      <pre id="agentPrompt"><code>Read the "For AI agents" section of
+https://github.com/zhangpl666ya/NekoQuotya
+then check which of my AI coding tools NekoQuotya detects,
+and set Claude-chan's daily budget to 3,000,000 tokens.</code></pre>
+    </div>
+    <div class="code-card small reveal">
+      <div class="code-title">%APPDATA%\NekoQuotya\packs\kimi\pack.json</div>
+      <pre><code>{
+  <k>"id"</k>: <s>"kimi"</s>,
+  <k>"name"</k>: { <k>"en"</k>: <s>"Kimi-chan"</s> },
+  <k>"version"</k>: 1, <k>"packFormat"</k>: 1,
+  <k>"source"</k>: { <k>"tokscaleClients"</k>: [<s>"kimi"</s>], <k>"quotaProvider"</k>: null },
+  <k>"theme"</k>: { <k>"color"</k>: <s>"#3D5AFE"</s> },
+  <k>"appearance"</k>: { <k>"renderer"</k>: <s>"placeholder"</s> }
+}</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ final cta ============ -->
+  <section class="final">
+    <div class="final-girls" aria-hidden="true">
+      <img src="assets/claude-sleeping.webp" alt="" loading="lazy" />
+      <img src="assets/gpt-sleeping.webp" alt="" loading="lazy" />
+      <img src="assets/gemini-sleeping.webp" alt="" loading="lazy" />
+      <img src="assets/deepseek-sleeping.webp" alt="" loading="lazy" />
+    </div>
+    <h2 data-i18n="final.title">Adopt a cat-girl for your quota</h2>
+    <p data-i18n="final.text">Free download. Install, and she shows up on your desktop.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="https://github.com/zhangpl666ya/NekoQuotya/releases/latest" target="_blank" rel="noopener" data-i18n="cta.download">Download for Windows</a>
+      <a class="btn btn-ghost" href="https://github.com/zhangpl666ya/NekoQuotya" target="_blank" rel="noopener" data-i18n="cta.source">View source</a>
+    </div>
+    <footer>
+      <span>NekoQuotya v1.0.1</span>
+      <span data-i18n="footer.powered">Usage data by <a href="https://github.com/junhoyeo/tokscale" target="_blank" rel="noopener">tokscale</a></span>
+      <span data-i18n="footer.note">Not affiliated with Anthropic, OpenAI, Google or DeepSeek.</span>
+    </footer>
+  </section>
+
+  <script src="main.js"></script>
+</body>
+</html>

@@ -97,12 +97,44 @@ export function App() {
           />
           {t('launcher.autostart')}
         </label>
+        <UpdateButton update={state.update} t={t} />
         <button className="quiet" onClick={() => api.command({ type: 'quit' })}>
           {t('launcher.quit')}
         </button>
       </footer>
     </div>
   );
+}
+
+function UpdateButton({ update, t }: { update: LauncherState['update']; t: Translate }) {
+  switch (update.state) {
+    case 'checking':
+      return <span className="update muted">{t('update.checking')}</span>;
+    case 'latest':
+      return (
+        <button className="update quiet" title={t('update.check')} onClick={() => api.command({ type: 'checkUpdate' })}>
+          {t('update.latest', { version: update.version })}
+        </button>
+      );
+    case 'available':
+      return (
+        <button className="update new" onClick={() => api.command({ type: 'openUpdate' })}>
+          {t('update.available', { version: update.version })}
+        </button>
+      );
+    case 'error':
+      return (
+        <button className="update quiet warn-text" onClick={() => api.command({ type: 'checkUpdate' })}>
+          {t('update.error')}
+        </button>
+      );
+    default:
+      return (
+        <button className="update quiet" onClick={() => api.command({ type: 'checkUpdate' })}>
+          {t('update.check')}
+        </button>
+      );
+  }
 }
 
 /** The pack's brand colour as CSS variables: --pack for text and borders, --pack-fill for bars */

@@ -5,7 +5,7 @@ import type { PetIntent } from './pet.ts';
 import type { PackLoadError } from './packs/registry.ts';
 import type { QuotaWindow, StatusData } from './types.ts';
 import type { Behavior, BehaviorOverride, EDITABLE_BEHAVIOR } from './packs/manifest.ts';
-import type { Period, SessionRow, Totals } from './stats.ts';
+import type { DayTotal, Period, SessionRow, Totals } from './stats.ts';
 import { LAUNCHER_CHANNELS } from './ipc/launcher.ts';
 import { PET_CHANNELS } from './ipc/pet.ts';
 import { SESSION_CHANNELS } from './ipc/sessions.ts';
@@ -44,6 +44,10 @@ export interface SessionsView {
   rows: SessionRow[];
   /** More sessions exist than are listed */
   truncated: boolean;
+  /** Active tokens per day (all periods), for the activity heatmap and the trend chart */
+  daily: DayTotal[];
+  /** Today's local date, YYYY-MM-DD */
+  today: string;
 }
 
 export type EditableBehavior = Pick<Behavior, (typeof EDITABLE_BEHAVIOR)[number]>;
@@ -126,12 +130,21 @@ export interface LauncherState {
   autostart: boolean;
   /** Launch-at-startup only makes sense for the installed app, not a dev run */
   autostartAvailable: boolean;
+  update: UpdateState;
 }
+
+/** Result of "Check for updates" (GitHub's latest release vs this build) */
+export type UpdateState =
+  | { state: 'idle' | 'checking' | 'error' }
+  | { state: 'latest' | 'available'; version: string };
 
 export type LauncherCommand =
   | { type: 'togglePet'; packId: string }
   | { type: 'openSessions'; packId: string }
   | { type: 'openSettings' }
+  | { type: 'checkUpdate' }
+  /** Open the newer release's page in the browser */
+  | { type: 'openUpdate' }
   /** New card order, every pack id once (dragged in the panel) */
   | { type: 'reorder'; order: string[] }
   | { type: 'refreshNow' }

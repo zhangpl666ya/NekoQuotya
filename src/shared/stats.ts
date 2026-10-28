@@ -112,3 +112,21 @@ export function sessionRows(snapshot: PackSnapshot, period: Period, now: number)
     .map(({ row, bucket, models }) => ({ ...row, usage: totalsOf(bucket, 1), models: [...models].sort() }))
     .sort((a, b) => b.usage.active - a.usage.active || b.lastDate.localeCompare(a.lastDate));
 }
+
+export interface DayTotal {
+  date: string;
+  /** input + output, excluding cache */
+  active: number;
+}
+
+/** Active tokens per day over the whole ledger plus today, oldest first; days without usage are left out */
+export function dailyTotals(snapshot: PackSnapshot, now: number): DayTotal[] {
+  const out: DayTotal[] = [];
+  for (const day of daysIn(snapshot, 'total', now)) {
+    const sum = emptyBucket();
+    for (const s of Object.values(day.sessions)) for (const b of Object.values(s.byModel)) addInto(sum, b);
+    const active = activeTokens(sum);
+    if (active > 0) out.push({ date: day.date, active });
+  }
+  return out.sort((a, b) => a.date.localeCompare(b.date));
+}

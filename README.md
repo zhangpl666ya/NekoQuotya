@@ -2,11 +2,13 @@
 
 A desktop pet in the style of an AI-girl character that watches your AI coding tools' token usage and subscription quotas. Design: [docs/architecture.md](docs/architecture.md).
 
-![NekoQuotya](build/icon.png)
+**🌸 Website: [zhangpl666ya.github.io/NekoQuotya](https://zhangpl666ya.github.io/NekoQuotya/)**
+
+[![NekoQuotya landing page](docs/images/preview.jpg)](https://zhangpl666ya.github.io/NekoQuotya/)
 
 ## Install (Windows)
 
-1. Download `NekoQuotya-Setup-1.0.0.exe` from [Releases](../../releases).
+1. Download the latest `NekoQuotya-Setup-<version>.exe` from [Releases](../../releases/latest).
 2. Run it. The installer is not code-signed yet, so Windows SmartScreen may warn: choose **More info → Run anyway**.
 3. The pet appears on the desktop and an icon appears in the tray. Click the tray icon for the panel.
 
@@ -19,7 +21,7 @@ Characters (one pet on the desktop at a time, chosen in Settings):
 | Gemini-chan | Gemini CLI (`~/.gemini`) | — | daily token budget |
 | DeepSeek-chan | DeepSeek Harness (`~/.dsh`) | — (API billing) | daily token budget |
 
-Using the pet: click to poke (her quota bars show for a few seconds), drag to move (the position is remembered), double-click to open the panel, right-click for a menu. In the panel, click a card for its sessions and drag cards to reorder them. Settings has the pet picker, daily budget, mood basis, sleep time and idle chatter. Launch at startup is in the panel footer.
+Using the pet: click to poke (her quota bars show for a few seconds), drag to move (the position is remembered), double-click to open the panel, right-click for a menu. In the panel, click a card for its activity heatmap, 60-day trend and sessions, and drag cards to reorder them. **Check for updates** in the panel footer asks GitHub for a newer release. Settings has the pet picker, daily budget, mood basis, sleep time and idle chatter. Launch at startup is in the panel footer.
 
 Your data stays on your computer: usage is read locally by tokscale and stored in `%APPDATA%\NekoQuotya\packs\<pack>\data`. Uninstalling leaves that folder in place.
 
@@ -167,6 +169,7 @@ One folder per AI tool (`claude`, `gpt`, `gemini`, `deepseek`), for example `pac
 packs/claude/
   pack.json        data sources, behavior settings, appearance
   appearance/      static images per mood, sleeping, and the panel card art
+  lines/           speech bubbles in the character's voice: en.json, zh-CN.json (key → variants)
   data/            written by the app
     history.json   the ledger: date → session → model. Survives log cleanup; cannot be rebuilt — do not delete
     backups/       daily copies of history.json (newest 7)

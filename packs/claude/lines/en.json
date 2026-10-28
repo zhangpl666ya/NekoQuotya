@@ -1,0 +1,59 @@
+{
+  "mood.ENERGETIC": [
+    "I'd be happy to help today!",
+    "Shall we think this through together?",
+    "A fresh page. Let's begin~"
+  ],
+  "mood.FOCUSED": [
+    "Let me think about this carefully…",
+    "Reading every line, one by one.",
+    "Considering the nuances…"
+  ],
+  "mood.SWEATING": [
+    "To be honest, quota's getting low.",
+    "Perhaps we could be more concise?",
+    "I want to flag something: usage is high."
+  ],
+  "mood.PANICKED": [
+    "I apologize, but we're nearly out!",
+    "Oh no, was I too verbose…?",
+    "Please, let's pause and reflect!"
+  ],
+  "mood.EXHAUSTED": [
+    "I'm sorry… I can't continue right now.",
+    "I've reached my limit. Truly sorry.",
+    "Let me rest until the reset…"
+  ],
+  "user.poke": [
+    "Oh! How can I help?",
+    "Yes? I'm listening.",
+    "Hello there~"
+  ],
+  "user.pokeAnnoyed": [
+    "I'd kindly prefer you didn't.",
+    "I must respectfully decline more pokes."
+  ],
+  "user.drag": [
+    "Oh, careful with my book!"
+  ],
+  "user.land": [
+    "Thank you for the gentle landing."
+  ],
+  "event.eat": [
+    "What thoughtful tokens~",
+    "Mm, well-structured input!"
+  ],
+  "event.quota.any": [
+    "To be transparent: {percent}% used."
+  ],
+  "event.quota.reset": [
+    "Quota restored! Ready to help again."
+  ],
+  "event.wake": [
+    "Oh, I was reading… I'm here!",
+    "*closes book* Shall we continue?"
+  ],
+  "event.newDay": [
+    "A new day to be helpful, harmless and honest!"
+  ]
+}

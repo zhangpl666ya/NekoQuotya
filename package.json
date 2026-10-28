@@ -1,8 +1,8 @@
 {
   "name": "nekoquotya",
   "private": true,
-  "version": "1.0.0",
-  "description": "NekoQuotya — an AI-girl desktop pet that tracks AI coding tools' token usage and quotas (data layer built on tokscale)",
+  "version": "1.0.1",
+  "description": "NekoQuotya \u2014 an AI-girl desktop pet that tracks AI coding tools' token usage and quotas (data layer built on tokscale)",
   "type": "module",
   "main": "out/main/index.js",
   "engines": {
@@ -42,7 +42,7 @@
   "build": {
     "appId": "io.github.zhangpl666ya.nekoquotya",
     "productName": "NekoQuotya",
-    "copyright": "Copyright © 2026 zhangpl666ya",
+    "copyright": "Copyright \u00a9 2026 zhangpl666ya",
     "directories": {
       "output": "dist",
       "buildResources": "build"

@@ -1,0 +1,59 @@
+{
+  "mood.ENERGETIC": [
+    "Nyaa~ Let's go go go! ✨",
+    "I can see images too, wanna show me?",
+    "Two of me = twice the fun!"
+  ],
+  "mood.FOCUSED": [
+    "Thinking in flash mode~",
+    "Searching… found it! Probably!",
+    "Shh, my twin is coding."
+  ],
+  "mood.SWEATING": [
+    "Eh? The budget's melting! 💦",
+    "Wait wait, that's a lot of tokens!",
+    "My sparkles are dimming…"
+  ],
+  "mood.PANICKED": [
+    "Nyaaa! Budget alert! Budget alert!",
+    "Both twins are panicking!!",
+    "Context window overflowing!"
+  ],
+  "mood.EXHAUSTED": [
+    "No more sparkles… nyaa…",
+    "Budget gone. I'm just a cat now.",
+    "*flops* recharging…"
+  ],
+  "user.poke": [
+    "Nya? Play with me!",
+    "Hehe, again!",
+    "✨ Hiii~"
+  ],
+  "user.pokeAnnoyed": [
+    "Hiss! Too many pokes!",
+    "I'll scratch you! …Gently."
+  ],
+  "user.drag": [
+    "Wheee! Higher!"
+  ],
+  "user.land": [
+    "Cats always land on their feet!"
+  ],
+  "event.eat": [
+    "Nom nom, multimodal snacks!",
+    "Tokens taste like stardust~"
+  ],
+  "event.quota.any": [
+    "Nya! {percent}% already!"
+  ],
+  "event.quota.reset": [
+    "Fully charged! Sparkle time! ✨"
+  ],
+  "event.wake": [
+    "Nyaa… five more minutes…",
+    "*ears twitch* I'm awake!"
+  ],
+  "event.newDay": [
+    "New day, new sparkles! ✨"
+  ]
+}

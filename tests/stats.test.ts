@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { mergeDay, type ScannedSession } from '../src/shared/ledger.ts';
-import { allPeriodTotals, periodStart, sessionRows } from '../src/shared/stats.ts';
+import { allPeriodTotals, dailyTotals, periodStart, sessionRows } from '../src/shared/stats.ts';
 import type { HistoryData, PackSnapshot, TokenBucket } from '../src/shared/types.ts';
 
 const bucket = (input: number, output = 0): TokenBucket => ({ input, output, cacheRead: 10, cacheWrite: 0, messages: 1, costUsd: 0 });
@@ -62,4 +62,14 @@ test('a stale today.json from a past day is not counted as today', () => {
   const s = snapshot();
   s.today = { ...s.today!, date: '2026-10-27' };
   assert.equal(allPeriodTotals(s, NOW).today.active, 0);
+});
+
+test('daily totals: active tokens per day, oldest first, today included', () => {
+  assert.deepEqual(dailyTotals(snapshot(), NOW), [
+    { date: '2026-09-30', active: 1000 },
+    { date: '2026-10-05', active: 100 },
+    { date: '2026-10-26', active: 25 },
+    { date: '2026-10-27', active: 30 },
+    { date: '2026-10-28', active: 7 },
+  ]);
 });

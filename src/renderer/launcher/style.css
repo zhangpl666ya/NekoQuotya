@@ -273,3 +273,26 @@ label.disabled {
 .pack.dragging {
   opacity: 0.4;
 }
+
+/* ---- update check (footer) ---- */
+
+.update {
+  margin-left: auto;
+  margin-right: 6px;
+  font-size: 12px;
+}
+
+.update.muted {
+  color: var(--muted);
+}
+
+.update.new {
+  border-color: #2f8f4e;
+  background: #eaf6ee;
+  color: #2f8f4e;
+  font-weight: 600;
+}
+
+.update.warn-text {
+  color: var(--danger);
+}
