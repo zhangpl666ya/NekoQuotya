@@ -28,7 +28,9 @@ import type { Runner } from './tokscaleRunner.ts';
 //               catch-up       startup / midnight / resume → every day after verifiedThrough up to yesterday
 //               re-verify      tokscale version change / manual → every ledger date + the last 35 days
 //               late arrival   packs with lateArrivalDays: the last N days, once a day
-//   quota     every 2 minutes while active, otherwise 10; failures back off 1→2→5→10 minutes
+//   quota     every 5 minutes while active, otherwise 15; failures back off 5→15→30→60 minutes.
+//             A provider missing from the output (e.g. Claude's endpoint answering 429) is a failure
+//             too: polling through a rate limit keeps it locked for good.
 //
 // Ledger rule (§3.5): sessions are never deleted; found → updated, missing → retained.
 // The scheduler emits structured events, never display text (see i18n/).
@@ -60,11 +62,11 @@ export interface SchedulerIntervals {
 
 export const DEFAULT_INTERVALS: SchedulerIntervals = {
   todayFallbackMs: 5 * 60_000,
-  quotaActiveMs: 2 * 60_000,
-  quotaIdleMs: 10 * 60_000,
+  quotaActiveMs: 5 * 60_000,
+  quotaIdleMs: 15 * 60_000,
   activeWindowMs: 10 * 60_000,
   tickMs: 30_000,
-  quotaBackoffMs: [60_000, 2 * 60_000, 5 * 60_000, 10 * 60_000],
+  quotaBackoffMs: [5 * 60_000, 15 * 60_000, 30 * 60_000, 60 * 60_000],
 };
 
 /** Days scanned when a ledger is first created */
@@ -461,11 +463,12 @@ export class Scheduler {
     try {
       const result = await this.runner.run({ kind: 'usage' });
       const usage = parseWith(UsageSchema, result.stdout, 'usage');
-      this.quotaFailures = 0;
+      let missing = false;
       for (const state of states) {
         const provider = state.pack.manifest.source.quotaProvider!;
         const entry = findProvider(usage, provider);
         if (!entry) {
+          missing = true;
           await this.markQuotaFailed(state, now, { code: 'quota_provider_missing', params: { provider } });
           continue;
         }
@@ -476,6 +479,7 @@ export class Scheduler {
         await this.clearError(state, 'quota');
         this.emit(state, 'quota');
       }
+      this.quotaFailures = missing ? this.quotaFailures + 1 : 0;
     } catch (err) {
       this.quotaFailures++;
       for (const state of states) await this.markQuotaFailed(state, now, toErrorInfo(err));

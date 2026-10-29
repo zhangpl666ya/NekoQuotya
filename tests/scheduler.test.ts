@@ -350,7 +350,7 @@ test('quota: a failure keeps the previous values as stale and backs off 1→2→
   assert.deepEqual(failed.error, { code: 'tokscale_timeout', params: { seconds: 20 } });
   assert.deepEqual(failed.windows.map((w) => [w.usedPercent, w.stale]), [[23, true], [3, true]]);
   assert.equal(failed.observedAt, ok.observedAt);
-  assert.deepEqual(delays, [60_000, 120_000, 300_000, 600_000, 600_000]);
+  assert.deepEqual(delays, [300_000, 900_000, 1_800_000, 3_600_000, 3_600_000]);
   assert.equal(JSON.parse(readFileSync(path.join(pack.dataDir, 'quota.json'), 'utf8')).windows[0].stale, true);
 
   fail = false;
@@ -364,6 +364,10 @@ test('quota: tokscale returning no quota for the provider is a per-pack error', 
   const scheduler = new Scheduler({ packs: [makePack()], runner, watch: false });
   await scheduler.refreshQuota();
   assert.deepEqual(scheduler.snapshot('claude')!.quota!.error, { code: 'quota_provider_missing', params: { provider: 'Claude' } });
+  // Other providers answering must not cancel the backoff (Claude's endpoint rate-limits with ~1 h Retry-After)
+  assert.equal(scheduler.nextQuotaDelay(), 300_000);
+  await scheduler.refreshQuota();
+  assert.equal(scheduler.nextQuotaDelay(), 900_000);
 });
 
 // ---- manual refresh and fallback -----------------------------------------------
@@ -380,14 +384,14 @@ test('manual refresh: today, history catch-up and quota at once; quota skips the
   });
   const scheduler = new Scheduler({ packs: [makePack()], runner, watch: false, now: () => at('2026-10-27') });
   await scheduler.runOnce();
-  assert.equal(scheduler.nextQuotaDelay(), 60_000); // failed once, backing off
+  assert.equal(scheduler.nextQuotaDelay(), 300_000); // failed once, backing off
 
   failUsage = false;
   runner.calls = [];
   await scheduler.refreshNow();
   assert.deepEqual([...new Set(runner.calls.map((c) => c.kind))], ['today', 'usage']); // history already verified to yesterday
   assert.equal(scheduler.snapshot('claude')!.quota!.error, null);
-  assert.equal(scheduler.nextQuotaDelay(), 600_000); // backoff cleared
+  assert.equal(scheduler.nextQuotaDelay(), 900_000); // backoff cleared
   await scheduler.stop();
 });
 

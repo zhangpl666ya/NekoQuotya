@@ -168,7 +168,7 @@ While the app runs, **today's usage** and **quota** refresh automatically and th
 | History · catch-up | midnight; app start; resume from sleep | every day after the ledger's `verifiedThrough` up to yesterday (last 35 days on first run) |
 | History · re-verify | tokscale version change; manual "re-verify all" | every date in the ledger plus the last 35 days |
 | History · late arrival | once a day, only for packs with `source.lateArrivalDays` | the last N days; for tools whose usage syncs from the cloud and arrives late. Claude does not need it (default 0) |
-| Quota | every 2 minutes while any pack is active, otherwise every 10 | — |
+| Quota | every 5 minutes while any pack is active, otherwise every 15 | — |
 
 Why history needs no timer: the logs of a finished day barely change. The only cases that need a second look are:
 - the last records around midnight (catch-up scans yesterday after the day changes);
@@ -178,7 +178,7 @@ Why history needs no timer: the logs of a finished day barely change. The only c
 
 Other rules:
 - A failed day stops `verifiedThrough` just before it; the next catch-up retries from there.
-- Quota failures back off 1→2→5→10 minutes; the last good values are kept and marked `stale`.
+- Quota failures back off 5→15→30→60 minutes; the last good values are kept and marked `stale`. A provider missing from `usage` output counts as a failure even when other providers answered: Claude's usage endpoint rate-limits with a ~1 hour `Retry-After`, and tokscale then silently drops Claude, so polling through it keeps the limit active.
 - Folders that cannot be watched fall back to scanning today every 60 s, noted in the status.
 
 ### 3.3 Data vocabulary
