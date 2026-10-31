@@ -123,7 +123,19 @@ export interface LauncherPack {
   activity: PetIntent['activity'] | null;
   /** Token usage per period; null until the first data arrives */
   usage: Record<Period, Totals> | null;
-  quota: { plan: string | null; windows: QuotaWindow[]; error: ErrorInfo | null; checking: boolean } | null;
+  /** Claude: chats on claude.ai / the desktop chat page leave no local log, so only Claude Code is counted */
+  usageLocalOnly: boolean;
+  quota: {
+    plan: string | null;
+    windows: QuotaWindow[];
+    error: ErrorInfo | null;
+    checking: boolean;
+    /** 'desktop' = read from Claude desktop's own samples (no reset times) */
+    source: 'tokscale' | 'desktop';
+    observedAt: number | null;
+    /** The command-line sign-in tokscale relies on has expired */
+    tokenExpired: boolean;
+  } | null;
   status: { lastError: StatusData['lastError']; warnings: string[]; retainedSessions: number } | null;
 }
 

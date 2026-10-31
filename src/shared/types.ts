@@ -91,6 +91,10 @@ export interface QuotaData {
   observedAt: number | null;
   lastAttemptAt: number;
   error: ErrorInfo | null;
+  /** Where the values came from; absent in files written before 1.0.4 (= tokscale) */
+  source?: 'tokscale' | 'desktop';
+  /** The command-line sign-in tokscale relies on has expired (Claude only) */
+  tokenExpired?: boolean;
 }
 
 export type WatchMode = 'native' | 'polling' | 'none';

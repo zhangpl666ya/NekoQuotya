@@ -212,6 +212,7 @@ function PackCard({ pack, t, locale, dragging, onDragStart, onDragOver, onDragEn
         ) : (
           <div className="detail">{t('launcher.noData')}</div>
         )}
+        {pack.usageLocalOnly && <div className="detail">{t('launcher.claudeCodeOnly')}</div>}
       </div>
 
       {pack.quota && (
@@ -229,6 +230,10 @@ function PackCard({ pack, t, locale, dragging, onDragStart, onDragOver, onDragEn
             .map((w) => (
               <QuotaBar key={w.rawLabel} window={w} t={t} locale={locale} />
             ))}
+          {pack.quota.source === 'desktop' && pack.quota.observedAt != null && (
+            <div className="detail">{t('launcher.quotaFromDesktop', { time: resetText(pack.quota.observedAt, locale) })}</div>
+          )}
+          {pack.quota.source === 'desktop' && pack.quota.tokenExpired && <div className="detail">{t('launcher.tokenExpiredHint')}</div>}
           {pack.quota.error && <div className="warn">{describeError(t, pack.quota.error)}</div>}
         </div>
       )}

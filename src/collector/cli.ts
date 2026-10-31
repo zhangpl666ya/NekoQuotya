@@ -8,6 +8,7 @@ import type { PackSnapshot, QuotaWindow } from '../shared/types.ts';
 import { activeTokens, localDate, shiftDate } from '../shared/usage.ts';
 import type { PetIntent } from '../shared/pet.ts';
 import { PetBrain } from '../main/brain/petBrain.ts';
+import { claudeLocalSource } from './claudeLocal.ts';
 import { Scheduler, type SchedulerEvent, type UpdateReason } from './scheduler.ts';
 import { TokscaleRunner, resolveTokscaleBinary } from './tokscaleRunner.ts';
 
@@ -65,6 +66,7 @@ if (values.pet && !oneShot) {
 const scheduler = new Scheduler({
   packs,
   runner: new TokscaleRunner(binary, { home: values.home }),
+  localQuota: { Claude: claudeLocalSource() },
   watch: !oneShot,
   onUpdate: (snap, reason) => {
     const line = describeUpdate(snap, reason);

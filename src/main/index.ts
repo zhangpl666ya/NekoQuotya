@@ -372,6 +372,7 @@ function launcherState(): LauncherState {
       id: pet.pack.id,
       name: packName(pet.pack.manifest, locale),
       theme: pet.pack.manifest.theme,
+      usageLocalOnly: pet.pack.manifest.source.tokscaleClients.includes('claude'),
       cardArt: cardArtUrl(pet.pack),
       petVisible: pet.visible,
       mood: snap ? intent.mood : null,
@@ -383,6 +384,9 @@ function launcherState(): LauncherState {
             windows: snap?.quota?.windows ?? [],
             error: snap?.quota?.error ?? null,
             checking: quotaChecking,
+            source: snap?.quota?.source ?? 'tokscale',
+            observedAt: snap?.quota?.observedAt ?? null,
+            tokenExpired: snap?.quota?.tokenExpired ?? false,
           }
         : null,
       status: snap?.status

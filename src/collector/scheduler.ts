@@ -11,7 +11,8 @@ import {
   sumSessions,
 } from '../shared/ledger.ts';
 import type { LoadedPack } from '../shared/packs/registry.ts';
-import type { HistoryData, PackSnapshot, QuotaData, Stage, StatusData, TodayData } from '../shared/types.ts';
+import type { HistoryData, PackSnapshot, QuotaData, QuotaWindow, Stage, StatusData, TodayData } from '../shared/types.ts';
+import type { DesktopSample, LocalQuotaSource } from './claudeLocal.ts';
 import { activeTokens, localDate, shiftDate } from '../shared/usage.ts';
 import { DataLock } from './dataLock.ts';
 import { findProvider, reportToSessions, usageToQuota } from './normalize.ts';
@@ -31,6 +32,8 @@ import type { Runner } from './tokscaleRunner.ts';
 //   quota     every 5 minutes while active, otherwise 15; failures back off 5→15→30→60 minutes.
 //             A provider missing from the output (e.g. Claude's endpoint answering 429) is a failure
 //             too: polling through a rate limit keeps it locked for good.
+//   local     quota providers with local sources (Claude desktop's own samples, the CLI token's
+//             expiry) are checked on every heartbeat; a changed file is applied at once
 //
 // Ledger rule (§3.5): sessions are never deleted; found → updated, missing → retained.
 // The scheduler emits structured events, never display text (see i18n/).
@@ -69,6 +72,9 @@ export const DEFAULT_INTERVALS: SchedulerIntervals = {
   quotaBackoffMs: [5 * 60_000, 15 * 60_000, 30 * 60_000, 60 * 60_000],
 };
 
+/** Claude desktop samples about every 15 minutes while it runs; older than this means it is closed */
+export const DESKTOP_STALE_MS = 40 * 60_000;
+
 /** Days scanned when a ledger is first created */
 export const BACKFILL_DAYS = 35;
 const MAX_WARNINGS = 10;
@@ -80,6 +86,8 @@ export interface SchedulerOptions {
   /** false: do not watch folders (one-shot runs and tests) */
   watch?: boolean;
   watcherOptions?: WatcherOptions;
+  /** Local quota sources by quota provider name (e.g. "Claude"); none by default */
+  localQuota?: Record<string, LocalQuotaSource>;
   now?: () => number;
   onUpdate?: (snapshot: PackSnapshot, reason: UpdateReason) => void;
   onEvent?: (event: SchedulerEvent) => void;
@@ -110,6 +118,8 @@ export class Scheduler {
   private readonly onUpdate: SchedulerOptions['onUpdate'];
   private readonly onEvent: (event: SchedulerEvent) => void;
   private readonly states = new Map<string, PackState>();
+  private readonly localQuota: Record<string, LocalQuotaSource>;
+  private readonly localFingerprints = new Map<string, string>();
 
   private tokscaleVersion: string | null = null;
   private currentDate: string;
@@ -135,6 +145,7 @@ export class Scheduler {
     this.now = options.now ?? Date.now;
     this.onUpdate = options.onUpdate;
     this.onEvent = options.onEvent ?? (() => {});
+    this.localQuota = options.localQuota ?? {};
     this.currentDate = localDate(this.now());
     for (const pack of options.packs) {
       this.states.set(pack.id, {
@@ -468,12 +479,22 @@ export class Scheduler {
         const provider = state.pack.manifest.source.quotaProvider!;
         const entry = findProvider(usage, provider);
         if (!entry) {
-          missing = true;
-          await this.markQuotaFailed(state, now, { code: 'quota_provider_missing', params: { provider } });
+          // tokscale's Claude query fails silently when the CLI token expired or the endpoint
+          // rate-limits; Claude desktop's own samples can still cover it
+          const expired = this.tokenExpired(provider, now);
+          if (await this.applyLocal(state, now)) continue;
+          if (!expired) missing = true;
+          await this.markQuotaFailed(
+            state,
+            now,
+            expired ? { code: 'claude_token_expired' } : { code: 'quota_provider_missing', params: { provider } }
+          );
           continue;
         }
         const { plan, windows } = usageToQuota(entry, now);
-        const quota: QuotaData = { schema: 1, provider, plan, windows, observedAt: now, lastAttemptAt: now, error: null };
+        const quota: QuotaData = {
+          schema: 1, provider, plan, windows, observedAt: now, lastAttemptAt: now, error: null, source: 'tokscale', tokenExpired: false,
+        };
         state.snapshot = { ...state.snapshot, quota };
         await state.store.write('quota', quota);
         await this.clearError(state, 'quota');
@@ -482,7 +503,10 @@ export class Scheduler {
       this.quotaFailures = missing ? this.quotaFailures + 1 : 0;
     } catch (err) {
       this.quotaFailures++;
-      for (const state of states) await this.markQuotaFailed(state, now, toErrorInfo(err));
+      for (const state of states) {
+        if (await this.applyLocal(state, now)) continue;
+        await this.markQuotaFailed(state, now, toErrorInfo(err));
+      }
     } finally {
       this.armQuota();
     }
@@ -499,11 +523,93 @@ export class Scheduler {
       observedAt: prev?.observedAt ?? null,
       lastAttemptAt: now,
       error,
+      source: prev?.source ?? 'tokscale',
+      tokenExpired: error.code === 'claude_token_expired',
     };
     state.snapshot = { ...state.snapshot, quota };
     await state.store.write('quota', quota);
     await this.recordError(state, 'quota', new NekoError(error));
     this.emit(state, 'quota');
+  }
+
+  private tokenExpired(provider: string, now: number): boolean {
+    const expiresAt = this.localQuota[provider]?.tokenExpiresAt();
+    return expiresAt != null && expiresAt <= now;
+  }
+
+  /**
+   * Use the local desktop sample when it is newer than what the pack shows.
+   * Returns false when there is none, so the caller reports the tokscale failure instead.
+   */
+  private async applyLocal(state: PackState, now: number, given?: DesktopSample | null): Promise<boolean> {
+    const provider = state.pack.manifest.source.quotaProvider!;
+    const source = this.localQuota[provider];
+    const sample = given ?? source?.desktopSample();
+    if (!source || !sample) return false;
+    const prev = state.snapshot.quota;
+    if (prev && !prev.error && prev.source !== 'desktop' && (prev.observedAt ?? 0) >= sample.at) return false;
+
+    const windows: QuotaWindow[] = [];
+    const add = (kind: 'session' | 'weekly', rawLabel: string, used: number | null) => {
+      if (used == null) return;
+      // The desktop file has no reset times: keep a known one that had not passed when sampled
+      const old = prev?.windows.find((w) => w.kind === kind);
+      const resetsAt = old?.resetsAt != null && old.resetsAt > sample.at ? old.resetsAt : null;
+      windows.push({
+        kind,
+        rawLabel,
+        usedPercent: used,
+        resetsAt,
+        applicable: true,
+        stale: now - sample.at > DESKTOP_STALE_MS || (resetsAt != null && resetsAt <= now),
+      });
+    };
+    add('session', 'Session', sample.session);
+    add('weekly', 'Weekly', sample.weekly);
+
+    const quota: QuotaData = {
+      schema: 1,
+      provider,
+      plan: prev?.plan ?? null,
+      windows,
+      observedAt: sample.at,
+      lastAttemptAt: now,
+      error: null,
+      source: 'desktop',
+      tokenExpired: this.tokenExpired(provider, now),
+    };
+    state.snapshot = { ...state.snapshot, quota };
+    await state.store.write('quota', quota);
+    await this.clearError(state, 'quota');
+    this.emit(state, 'quota');
+    return true;
+  }
+
+  /** Heartbeat: a local quota file changed → apply a newer sample, or query again after a fresh sign-in */
+  async checkLocalQuota(): Promise<void> {
+    const now = this.now();
+    let requery = false;
+    for (const [provider, source] of Object.entries(this.localQuota)) {
+      const states = this.active().filter((s) => s.pack.manifest.source.quotaProvider === provider);
+      if (!states.length) continue;
+      const fingerprint = source.fingerprint();
+      if (this.localFingerprints.get(provider) === fingerprint) continue;
+      this.localFingerprints.set(provider, fingerprint);
+      const expired = this.tokenExpired(provider, now);
+      const sample = source.desktopSample();
+      for (const state of states) {
+        const quota = state.snapshot.quota;
+        if (quota?.tokenExpired && !expired) requery = true;
+        else if (sample && (!quota || quota.error || quota.source === 'desktop' || (quota.observedAt ?? 0) < sample.at)) {
+          await this.applyLocal(state, now, sample);
+        }
+      }
+    }
+    if (requery) {
+      // Signed in again: query at once, skipping any backoff
+      this.quotaFailures = 0;
+      await this.refreshQuota();
+    }
   }
 
   private armQuota(): void {
@@ -548,15 +654,19 @@ export class Scheduler {
       void this.refreshToday(this.activeIds());
     }
 
-    // A quota window reached its reset time: mark it stale and query again soon
+    void this.checkLocalQuota().catch(() => {});
+
+    // A quota window reached its reset time, or desktop samples stopped: mark it stale
     let expired = false;
     for (const state of this.active()) {
       const quota = state.snapshot.quota;
-      if (!quota?.windows.some((w) => !w.stale && w.resetsAt != null && w.resetsAt <= now)) continue;
+      const old = quota?.source === 'desktop' && quota.observedAt != null && now - quota.observedAt > DESKTOP_STALE_MS;
+      const due = (w: QuotaWindow) => old || (w.resetsAt != null && w.resetsAt <= now);
+      if (!quota?.windows.some((w) => !w.stale && due(w))) continue;
       expired = true;
       const next: QuotaData = {
         ...quota,
-        windows: quota.windows.map((w) => (w.resetsAt != null && w.resetsAt <= now ? { ...w, stale: true } : w)),
+        windows: quota.windows.map((w) => (due(w) ? { ...w, stale: true } : w)),
       };
       state.snapshot = { ...state.snapshot, quota: next };
       void state.store.write('quota', next).catch(() => {});

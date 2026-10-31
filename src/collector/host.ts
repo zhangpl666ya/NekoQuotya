@@ -1,5 +1,6 @@
 import type { CollectorRequest } from '../shared/ipc.ts';
 import { loadPacks } from '../shared/packs/registry.ts';
+import { claudeLocalSource } from './claudeLocal.ts';
 import { Scheduler } from './scheduler.ts';
 import { TokscaleRunner, resolveTokscaleBinary } from './tokscaleRunner.ts';
 
@@ -34,6 +35,7 @@ async function handle(request: CollectorRequest): Promise<void> {
         scheduler = new Scheduler({
           packs,
           runner: new TokscaleRunner(resolveTokscaleBinary()),
+          localQuota: { Claude: claudeLocalSource() },
           onUpdate: (snapshot, reason) => send({ type: 'update', snapshot, reason }),
           onEvent: (event) => send({ type: 'event', event }),
         });

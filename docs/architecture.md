@@ -154,7 +154,7 @@ Measured: about 0.4 s per day for Claude.
 | One pack's logs changed | today, that pack's clients only (~0.3 s) |
 | Startup, fallback scan, manual refresh | today, all packs' clients in one call |
 | History catch-up | one call per day, with every client that needs that day |
-| Quota | one `usage` call for the whole app, split by `quotaProvider` |
+| Quota | one `usage` call for the whole app, split by `quotaProvider`; Claude also has local sources (below) |
 
 ### 3.2 Scheduling
 
@@ -179,6 +179,10 @@ Why history needs no timer: the logs of a finished day barely change. The only c
 Other rules:
 - A failed day stops `verifiedThrough` just before it; the next catch-up retries from there.
 - Quota failures back off 5→15→30→60 minutes; the last good values are kept and marked `stale`. A provider missing from `usage` output counts as a failure even when other providers answered: Claude's usage endpoint rate-limits with a ~1 hour `Retry-After`, and tokscale then silently drops Claude, so polling through it keeps the limit active.
+- **Claude local sources** (`collector/claudeLocal.ts`, checked on every heartbeat, applied as soon as a file changes):
+  - Claude desktop's own samples in `%LOCALAPPDATA%\Claude-Data\claude_*\plan-usage-history.json` (Store install; `version: 2`, `u.fh` = 5-hour used %, `u.sd` = 7-day used %). Undocumented, so any other version is ignored. It has no reset times: a known reset time is kept while it has not passed. Desktop samples irregularly (about every 15 minutes in some stretches, only at startup in others; it logs that polling needs its tray opened within 24 hours), so data older than 40 minutes is shown as stale with its time.
+  - The command-line token expiry: tokscale's Claude query uses the access token in `~/.claude/.credentials.json`, which only the `claude` CLI refreshes (Claude desktop does not). Only `claudeAiOauth.expiresAt` is read. Expired → `claude_token_expired` with the fix (run `claude` once), no backoff; when the file changes and is valid again, the quota is queried at once.
+  - Newest wins: a tokscale result when it has Claude, otherwise the desktop sample when it is newer than what is shown (`QuotaData.source`).
 - Folders that cannot be watched fall back to scanning today every 60 s, noted in the status.
 
 ### 3.3 Data vocabulary
@@ -216,7 +220,7 @@ Active tokens = input + output, excluding cache; used for the daily budget.
 - Each pack writes only to its own `data/`, atomically (temp file + rename).
 - On start the existing data is read first, so the pet has something to show immediately; refreshes follow in the background.
 - `today.json` is written on every today scan; `history.json` only on catch-up or re-verify, so a growing file is not rewritten constantly.
-- The core never reads or stores credentials; tokscale reads whatever it needs for quota queries itself.
+- The core never reads or stores credentials; tokscale reads whatever it needs for quota queries itself. The one exception is the expiry time in `~/.claude/.credentials.json` (§3.2); the tokens in that file are never kept, logged or sent.
 
 ### 3.5 Session ledger: updated when found, retained when gone
 

@@ -19,6 +19,7 @@ export type ErrorCode =
   | 'tokscale_bad_output'
   | 'tokscale_stopped'
   | 'quota_provider_missing'
+  | 'claude_token_expired'
   | 'history_unreadable'
   | 'history_days_failed'
   | 'data_locked'
